@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জাতীয় বেতন স্কেল ২০২৬ – বেতন নির্ধারণী ক্যালকুলেটর</title>
+<style>
+:root{
+  --bg:#f3f6f4; --card:#ffffff; --ink:#1b2a24; --muted:#5b6b64; --line:#dbe4df;
+  --brand:#0b6b4f; --brand2:#0e8a66; --soft:#e6f3ee; --warn:#fff4d6; --warnink:#7a5b00;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f1714; --card:#17221e; --ink:#e7f0ec; --muted:#98aaa2; --line:#2a3a34; --soft:#1b2f28; --warn:#3a3210; --warnink:#f1d98a;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans Bengali","Kalpurush","SolaimanLipi",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:22px 16px;text-align:center}
+header h1{margin:0 0 4px;font-size:1.25rem}
+header p{margin:0;opacity:.92;font-size:.9rem}
+main{max-width:860px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 10px;font-size:1.05rem;color:var(--brand)}
+label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:600}
+.btn{background:var(--brand);color:#fff;width:100%;margin-top:14px}
+.btn2{background:var(--soft);color:var(--brand);margin-right:8px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:4px}
+.warn{background:var(--warn);color:var(--warnink);padding:10px 12px;border-radius:10px;margin:8px 0;font-size:.88rem}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;white-space:nowrap;font-weight:600}
+td.k{width:2.2em;color:var(--muted)}
+tr.sub td{padding-left:22px}
+tr.hl td{background:var(--soft)}
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:700px){.stages{grid-template-columns:1fr}}
+.stage{border:1px solid var(--line);border-radius:12px;padding:12px}
+.stage h3{margin:0 0 2px;font-size:.95rem}
+.stage small{color:var(--muted)}
+.stage .big{font-size:1.35rem;font-weight:700;color:var(--brand);margin:6px 0}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;padding:2px 0}
+.row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:6px;font-weight:700}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--brand);font-weight:600}
+.note{font-size:.82rem;color:var(--muted)}
+.ad{background:var(--soft);border:1px dashed var(--brand);border-radius:12px;padding:14px;text-align:center;font-weight:600}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:18px 12px 30px}
+.hidden{display:none}
+.chk{display:flex;align-items:flex-start;gap:8px;margin:8px 0;font-size:.88rem;color:var(--ink);cursor:pointer}
+.chk input{width:auto;margin-top:4px;flex:none}
+.s4 td.n{min-width:6.5em}
+.s4 tr.sum td{border-top:2px solid var(--line);font-weight:700}
+.s4 tr.net td{background:var(--soft);font-weight:700;color:var(--brand)}
+.up{color:var(--brand);font-weight:700}
+details.hg{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:14px}
+details.hg[open]{background:var(--soft)}
+details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.ms{border-left:3px solid var(--brand);padding:6px 10px;margin:8px 0;background:var(--card);border-radius:0 8px 8px 0}
+.ms b{color:var(--brand)}
+.ms.no{border-left-color:#b45309}
+@media print{
+  header,.noprint,.ad,footer .noprint{display:none!important}
+  body{background:#fff;color:#000} .card{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>জাতীয় বেতন স্কেল ২০২৬ – বেতন নির্ধারণী ক্যালকুলেটর</h1>
+  <p>এস.আর.ও. নং ৩৪৭-আইন/২০২৬ (১৭-০৯-২০২৬) অনুযায়ী</p>
+</header>
+
+<main>
+  <section class="card noprint" id="inputCard">
+    <h2>১) আপনার তথ্য দিন</h2>
+    <label for="grade">গ্রেড</label>
+    <select id="grade"></select>
+
+    <div id="basicWrap">
+      <label for="basicSel">৩০ জুন ২০২৬ তারিখের মূল বেতন (২০১৫ স্কেলের ধাপ)</label>
+      <select id="basicSel"></select>
+    </div>
+    <div id="basicManualWrap" class="hidden">
+      <label for="basicManual">৩০ জুন ২০২৬ তারিখের মূল বেতন (টাকা)</label>
+      <input id="basicManual" type="number" inputmode="numeric" min="0" placeholder="যেমন: 86000">
+    </div>
+
+    <label for="pp">পিপি – পার্সোনাল পে (যদি থাকে)</label>
+    <input id="pp" type="number" inputmode="numeric" min="0" value="0">
+
+    <details class="hg" id="hgBox">
+      <summary>উচ্চতর গ্রেড (৮ ও ১৪ বছর) — গেজেটের অনুচ্ছেদ ৬</summary>
+      <p class="note" style="margin-top:8px">২০১৫ সালে ১০ ও ১৬ বছরে উচ্চতর গ্রেড ছিল। ২০২৬ গেজেটে একই পদে ৮ বছর পূর্তিতে (৯ম বছরে) ১ম এবং তার ৬ বছর পর (৭ম বছরে) ২য় উচ্চতর গ্রেড। ব্লকড পদে (পদোন্নতির বিধান নেই) ২য় গ্রেডের ৮ বছর পর ৩য় গ্রেড। এই সুবিধা ৪র্থ গ্রেড পর্যন্ত; ৩য় বা তার ওপরের গ্রেডে যাওয়া যাবে না।</p>
+      <div class="grid">
+        <div><label for="hgMain">পদের মূল গ্রেড (মূল স্কেল)</label><select id="hgMain"></select></div>
+        <div><label for="hgCnt">৩০ জুন ২০২৬ পর্যন্ত এই পদে পাওয়া উচ্চতর গ্রেড / টাইম স্কেল / সিলেকশন গ্রেড</label>
+          <select id="hgCnt"><option value="0">একটিও পাইনি</option><option value="1">১টি পেয়েছি</option><option value="2">২টি বা বেশি পেয়েছি</option></select></div>
+        <div><label for="hgStart">এই পদে যোগদান / শেষ পদোন্নতির তারিখ</label><input type="date" id="hgStart"></div>
+        <div id="hgFirstWrap" class="hidden"><label for="hgFirst">প্রথম উচ্চতর গ্রেড পাওয়ার তারিখ</label><input type="date" id="hgFirst"></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="hgBlocked"> ব্লকড পদ — পদোন্নতির কোনো সুযোগ নেই (৩য় উচ্চতর গ্রেডের জন্য)</label>
+      <button type="button" class="btn2" id="hgBtn">প্রাপ্যতার সময়সূচি দেখুন</button>
+      <hr>
+      <label class="chk"><input type="checkbox" id="hgNow"> ১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য — বেতন সেই গ্রেডে হিসাব করুন</label>
+      <div id="hgNowBox" class="hidden">
+        <p class="note">উপরের "গ্রেড" ঘরে ৩০ জুন ২০২৬ তারিখে আপনি যে গ্রেডের স্কেলে বেতন পেতেন সেটি দিন (অনুচ্ছেদ ৪)। উচ্চতর গ্রেড হবে তার ঠিক পরবর্তী গ্রেড। গেজেটে এই গ্রেডের ধাপ কীভাবে ঠিক হবে তার সূত্র আলাদা করে দেওয়া নেই, তাই পদ্ধতিটি আপনার অফিসের আদেশ অনুযায়ী বেছে নিন।</p>
+        <label for="hgMethod">উচ্চতর গ্রেডে ধাপ নির্ধারণের পদ্ধতি</label>
+        <select id="hgMethod">
+          <option value="A">ক) মূল স্কেলের ধাপ (৭ নং) এর সমান বা পরবর্তী ধাপ, তারপর ১টি ইনক্রিমেন্ট</option>
+          <option value="B">খ) ইনক্রিমেন্টসহ ধাপ (মূল স্কেলের ৮ নং) এর সমান বা পরবর্তী ধাপ</option>
+          <option value="C">গ) আমি নিজে ধাপ বেছে নেব</option>
+        </select>
+        <div id="hgManualWrap" class="hidden"><label for="hgManual">উচ্চতর গ্রেডের ২০২৬ স্কেলের ধাপ (৭ নং)</label><select id="hgManual"></select></div>
+      </div>
+    </details>
+
+    <h2 style="margin-top:18px">২) ভাতা ও কর্তন (মাসিক, ৩০ জুন ২০২৬ এর অঙ্ক)</h2>
+    <p class="note">গেজেট অনুযায়ী ৩১ ডিসেম্বর ২০২৭ পর্যন্ত ভাতা ৩০ জুন ২০২৬ তারিখে প্রাপ্য অঙ্কেই চলবে। তাই আপনার পে-স্লিপ দেখে অঙ্কগুলো লিখুন।</p>
+    <div class="grid">
+      <div><label for="hra">বাড়ি ভাড়া ভাতা</label><input id="hra" type="number" inputmode="numeric" min="0" value="0"></div>
+      <div><label for="med">চিকিৎসা ভাতা</label><input id="med" type="number" inputmode="numeric" min="0" value="1500"></div>
+      <div><label for="edu">শিক্ষা সহায়ক ভাতা</label><input id="edu" type="number" inputmode="numeric" min="0" value="0"><div class="hint">সন্তানপ্রতি ৫০০, সর্বোচ্চ ১০০০</div></div>
+      <div><label for="tif">টিফিন ভাতা</label><input id="tif" type="number" inputmode="numeric" min="0" value="0"></div>
+      <div><label for="conv">যাতায়াত ভাতা</label><input id="conv" type="number" inputmode="numeric" min="0" value="0"></div>
+      <div><label for="chg">কার্যভার (চলতি দায়িত্ব) ভাতা</label><input id="chg" type="number" inputmode="numeric" min="0" value="0"></div>
+      <div><label for="wash">ধোলাই ভাতা</label><input id="wash" type="number" inputmode="numeric" min="0" value="0"></div>
+      <div><label for="oth">অন্যান্য ভাতা</label><input id="oth" type="number" inputmode="numeric" min="0" value="0"></div>
+    </div>
+    <label for="gpf">জিপিএফ / অন্যান্য মাসিক কর্তন</label>
+    <input id="gpf" type="number" inputmode="numeric" min="0" value="0">
+
+    <h2 style="margin-top:18px">৩) ০১ জানুয়ারি ২০২৮ থেকে নতুন গেজেটের ভাতা (ধাপ ৪)</h2>
+    <p class="note">গেজেট অনুযায়ী ১ জানুয়ারি ২০২৮ থেকে বাড়ি ভাড়া, চিকিৎসা, টিফিন, যাতায়াত, মোবাইল, ধোলাই ভাতাসহ সব ভাতা নতুন হারে চালু হবে। ধাপ ৪-এর হিসাবের জন্য নিচের তথ্য দিন। উপরের মাসিক কর্তনের অঙ্কই ধাপ ৪-এও ধরা হবে।</p>
+    <label for="area">কর্মস্থলের এলাকা (বাড়ি ভাড়া ভাতার হারের জন্য)</label>
+    <select id="area">
+      <option value="dhaka">ঢাকা উত্তর ও দক্ষিণ সিটি কর্পোরেশন</option>
+      <option value="city">খুলনা, রাজশাহী, চট্টগ্রাম, সিলেট, বরিশাল, নারায়ণগঞ্জ, কুমিল্লা, রংপুর, গাজীপুর, ময়মনসিংহ ও বগুড়া সিটি কর্পোরেশন এবং সাভার ও কক্সবাজার পৌর এলাকা</option>
+      <option value="other" selected>অন্যান্য স্থান</option>
+      <option value="gov">সরকারি বাসস্থানে থাকি (বাড়ি ভাড়া ভাতা নেই)</option>
+    </select>
+    <div class="grid">
+      <div><label for="age">বয়স (চিকিৎসা ভাতার জন্য)</label>
+        <select id="age"><option value="u50">৫০ বছর পর্যন্ত (মাসিক ৩,০০০)</option><option value="o50">৫০ বছর ১ দিন থেকে পিআরএল শেষ পর্যন্ত (মাসিক ৪,০০০)</option></select></div>
+      <div><label for="kids">শিক্ষা সহায়ক ভাতা: সন্তান সংখ্যা</label>
+        <select id="kids"><option value="0">নেই</option><option value="1">১ জন (৫০০)</option><option value="2">২ জন বা বেশি (১,০০০)</option></select></div>
+      <div><label for="sk">বিশেষ চাহিদাসম্পন্ন (প্রতিবন্ধী) সন্তান</label>
+        <select id="sk"><option value="0">নেই</option><option value="1">১ জন (৩,০০০)</option><option value="2">২ জন (৬,০০০)</option></select></div>
+      <div><label for="zone">বিশেষ এলাকা ভাতা</label>
+        <select id="zone"><option value="none">প্রযোজ্য নয়</option><option value="hillSadar">পাহাড়ি ভাতা – পার্বত্য জেলা সদর ও সদর উপজেলা (২০%, সর্বোচ্চ ৫,০০০)</option><option value="hillOther">পাহাড়ি ভাতা – অন্য উপজেলা (২০%, সর্বোচ্চ ৫,৫০০)</option><option value="haor">হাওর/দ্বীপ/চর ভাতা (২০%, সর্বোচ্চ ৫,০০০)</option></select></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="cityCorp"> কর্মস্থল সিটি কর্পোরেশন এলাকায় (যাতায়াত ভাতা ৬০০ — শুধু ১১তম–২০তম গ্রেড)</label>
+    <label class="chk"><input type="checkbox" id="lunch"> প্রতিষ্ঠান থেকে লাঞ্চ ভাতা বা বিনামূল্যে দুপুরের খাবার পাই (তাহলে টিফিন ভাতা নেই)</label>
+    <label class="chk"><input type="checkbox" id="wash4"> আমার ক্ষেত্রে ধোলাই ভাতা প্রযোজ্য (৩০০)</label>
+    <label class="chk"><input type="checkbox" id="chg4"> চলতি/অতিরিক্ত দায়িত্বের কার্যভার ভাতা পাই (১,৫০০)</label>
+    <label for="oth4">অন্যান্য ভাতা ২০২৮ থেকে (টাকা, যেমন ঝুঁকি ভাতা)</label>
+    <input id="oth4" type="number" inputmode="numeric" min="0" value="0">
+
+    <button class="btn" id="calcBtn">হিসাব করুন</button>
+  </section>
+
+  <div id="msgs"></div>
+
+  <section class="card hidden" id="stmtCard">
+    <h2>বেতন নির্ধারণী বিবরণী</h2>
+    <p class="note" id="stmtHead"></p>
+    <table id="stmt"></table>
+  </section>
+
+  <section class="card hidden" id="stageCard">
+    <h2>তিন ধাপে মাসিক বেতন</h2>
+    <div class="stages" id="stages"></div>
+    <p class="note" style="margin-top:10px">উৎসব ভাতা (বছরে ২টি, প্রতিটি ১টি মূল বেতনের সমান) ও বাংলা নববর্ষ ভাতা (২০%) ৩০ জুন ২০২৬ এর মূল বেতনের ভিত্তিতে নিচে দেখানো হলো:</p>
+    <div id="annual"></div>
+    <div class="noprint" style="margin-top:12px">
+      <button class="btn2" onclick="window.print()">প্রিন্ট / PDF</button>
+      <details style="display:inline-block"><summary>স্কেল টেবিল মিলিয়ে দেখুন</summary><div id="scaleView" class="note"></div></details>
+    </div>
+  </section>
+
+  <section class="card hidden s4" id="stage4Card">
+    <h2>ধাপ ৪ — ০১ জানুয়ারি ২০২৮ থেকে (নতুন হারের ভাতাসহ)</h2>
+    <p class="note" id="s4head"></p>
+    <table id="s4tab"></table>
+    <div id="s4cmp" style="margin-top:10px"></div>
+    <p class="note" id="s4note" style="margin-top:8px"></p>
+  </section>
+
+  <section class="card hidden" id="hgCard">
+    <h2>উচ্চতর গ্রেডের প্রাপ্যতা (অনুচ্ছেদ ৬)</h2>
+    <div id="hgOut"></div>
+  </section>
+
+  <section class="card">
+    <h2>সতর্কতা</h2>
+    <p class="note">এটি একটি সহায়ক হিসাবের টুল। গেজেট অনুযায়ী চূড়ান্ত বেতন নির্ধারণ iBAS++ অনলাইন সিস্টেমে (Pay Fixation) জমা দিয়ে ডিডিও ও হিসাবরক্ষণ অফিসের অনুমোদনে হয়। বেতন ও ভাতার হিসাব অফিসিয়াল গেজেটের সঙ্গে মিলিয়ে নিন। ১ জুলাই ২০২৬ থেকে আদেশ জারির তারিখ পর্যন্ত বকেয়া আলাদাভাবে হিসাব হবে। উচ্চতর গ্রেডের ক্ষেত্রে গেজেটে প্রাপ্যতার শর্ত স্পষ্ট, কিন্তু উচ্চতর গ্রেডের ধাপ নির্ধারণের সূত্র সুনির্দিষ্ট নয়; তাই ওই অংশ আপনার অফিসের আদেশের সঙ্গে মিলিয়ে নিন। ধাপ ৪-এ ১ জুলাই ২০২৮ এর পরবর্তী বার্ষিক ইনক্রিমেন্ট ধরা হয়নি; ২০২৮ সালের ভাতার হার গেজেটের অনুচ্ছেদ ১২–২৮ থেকে নেওয়া।</p>
+  </section>
+
+  <section class="ad">এরকম ওয়েবসাইট, ওয়েব অ্যাপ, অটোমেশন টুল ডিজাইন করাতে চাইলে যোগাযোগ করুন 👉 01817662105, freelancer.abulhossain@gmail.com</section>
+</main>
+
+<footer>
+  © Abul Hossain | Designed by Abul Hossain | যোগাযোগ: 01817662105, freelancer.abulhossain@gmail.com
+</footer>
+
+<script>
+/* ===== গেজেট থেকে নেওয়া স্কেল ডেটা (অনুচ্ছেদ ৩) ===== */
+const OLD = {"1":[78000],"2":[66000,68480,71050,73720,76490],"3":[56500,58760,61120,63570,66120,68770,71530,74400],"4":[50000,52000,54080,56250,58500,60840,63280,65820,68460,71200],"5":[43000,44940,46970,49090,51300,53610,56030,58560,61200,63960,66840,69850],"6":[35500,37280,39150,41110,43170,45330,47600,49980,52480,55110,57870,60770,63810,67010],"7":[29000,30450,31980,33580,35260,37030,38890,40840,42890,45040,47300,49670,52160,54770,57510,60390,63410],"8":[23000,24150,25360,26630,27970,29370,30840,32390,34010,35720,37510,39390,41360,43430,45610,47900,50300,52820,55470],"9":[22000,23100,24260,25480,26760,28100,29510,30990,32540,34170,35880,37680,39570,41550,43630,45820,48120,50530,53060],"10":[16000,16800,17640,18530,19460,20440,21470,22550,23680,24870,26120,27430,28810,30260,31780,33370,35040,36800,38640],"11":[12500,13130,13790,14480,15210,15980,16780,17620,18510,19440,20420,21450,22530,23660,24850,26100,27410,28790,30230],"12":[11300,11870,12470,13100,13760,14450,15180,15940,16740,17580,18460,19390,20360,21380,22450,23580,24760,26000,27300],"13":[11000,11550,12130,12740,13380,14050,14760,15500,16280,17100,17960,18860,19810,20810,21860,22960,24110,25320,26590],"14":[10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310,22380,23500,24680],"15":[9700,10190,10700,11240,11810,12410,13040,13700,14390,15110,15870,16670,17510,18390,19310,20280,21300,22370,23490],"16":[9300,9770,10260,10780,11320,11890,12490,13120,13780,14470,15200,15960,16760,17600,18480,19410,20390,21410,22490],"17":[9000,9450,9930,10430,10960,11510,12090,12700,13340,14010,14720,15460,16240,17060,17920,18820,19770,20760,21800],"18":[8800,9240,9710,10200,10710,11250,11820,12420,13050,13710,14400,15120,15880,16680,17520,18400,19320,20290,21310],"19":[8500,8930,9380,9850,10350,10870,11420,12000,12600,13230,13900,14600,15330,16100,16910,17760,18650,19590,20570],"20":[8250,8670,9110,9570,10050,10560,11090,11650,12240,12860,13510,14190,14900,15650,16440,17270,18140,19050,20010]};   // জাতীয় বেতনস্কেল ২০১৫
+const NEW = {"1":[156000],"2":[132000,135700,139400,143200,147200,151200,153000],"3":[113000,117000,121100,125300,129700,134300,139000,143800,148800],"4":[100000,103500,107200,110900,114800,118800,123000,127300,131700,136300,142400],"5":[86000,89500,93100,96800,100700,104700,108900,113200,117700,122500,127400,132400,139700],"6":[71000,74600,78300,82200,86400,90700,95200,100000,104900,110200,115700,121500,127600,134000],"7":[58000,60900,64000,67200,70500,74100,77800,81700,85700,90000,94500,99200,104200,109400,114900,120600,126800],"8":[46000,48300,50800,53300,56000,58800,61700,64800,68000,71400,75000,78700,82700,86800,91100,95700,100500,105500,110800],"9":[44000,46200,48600,51000,53500,56200,59000,62000,65100,68300,71700,75300,79100,83000,87200,91500,96100,100900,105900],"10":[32000,33600,35300,37100,38900,40900,42900,45100,47300,49700,52200,54800,57500,60400,63400,66600,69900,73400,77300],"11":[25000,26300,27600,29000,30400,32000,33600,35200,37000,38800,40800,42800,44900,47200,49500,52000,54600,57300,60500],"12":[24300,25600,26800,28200,29600,31100,32600,34200,36000,37700,39600,41600,43700,45900,48200,50600,53100,55700,58700],"13":[24000,25200,26500,27800,29200,30700,32200,33800,35500,37300,39100,41100,43200,45300,47600,49900,52400,55100,58000],"14":[23500,24700,26000,27300,28600,30000,31500,33100,34800,36500,38300,40200,42300,44400,46600,48900,51300,53900,56800],"15":[22800,24000,25200,26400,27800,29100,30600,32100,33700,35400,37200,39000,41000,43000,45200,47400,49800,52300,55200],"16":[21900,23000,24200,25400,26700,28000,29400,30900,32400,34000,35700,37500,39400,41300,43400,45600,47900,50200,52900],"17":[21400,22500,23600,24800,26100,27400,28700,30200,31700,33200,34900,36700,38500,40400,42400,44500,46800,49100,51900],"18":[21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48200,50900],"19":[20500,21600,22700,23800,25000,26200,27500,28900,30300,31900,33400,35100,36900,38700,40600,42700,44800,47000,49600],"20":[20000,21000,22100,23200,24400,25600,26900,28200,29600,31100,32600,34300,36000,37800,39600,41600,43700,45900,48400]};   // জাতীয় বেতনস্কেল ২০২৬
+const SPECIAL = {
+  S172: { label: "মন্ত্রিপরিষদ সচিব / প্রধানমন্ত্রীর মুখ্য সচিব ও সমমর্যাদা (নির্ধারিত ১,৭২,০০০)", pay: 172000 },
+  S164: { label: "সিনিয়র সচিব ও সমমর্যাদা (নির্ধারিত ১,৬৪,০০০)", pay: 164000 }
+};
+
+/* ===== ছোট সহায়ক ফাংশন ===== */
+const bnNum = new Intl.NumberFormat("bn-BD");
+const fmt = n => "৳ " + bnNum.format(n);
+const $ = id => document.getElementById(id);
+const val = id => Math.max(0, Number($(id).value) || 0);
+
+/* ===== মূল হিসাব (এই ফাংশনই ফর্মের ১৬টি লাইনের ফর্মুলা) ===== */
+function calculate(grade, basic, pp, hg) {
+  const w = [];                                   // সতর্কবার্তা
+  const special = SPECIAL[grade];
+  const g = special ? 1 : Number(grade);
+  // উচ্চতর গ্রেড (অনুচ্ছেদ ৬): ১ জুলাই ২০২৬ থেকে পরবর্তী উচ্চতর গ্রেড; ৪র্থ গ্রেডের ওপরে যাওয়া যাবে না (৬(৩))
+  let gh = null;
+  if (hg && hg.on) {
+    if (special || g < 5) w.push("উচ্চতর গ্রেডের সুবিধা ৪র্থ গ্রেড পর্যন্ত; ৩য় বা তার ওপরের গ্রেডে যাওয়া যাবে না (অনুচ্ছেদ ৬(৩)), তাই এই ক্ষেত্রে উচ্চতর গ্রেড ধরা হয়নি।");
+    else gh = g - 1;
+  }
+  const gEff = gh || g;                           // যে গ্রেডের স্কেলে বেতন নির্ধারিত হবে
+  const p1 = gEff <= 9 ? 0.40 : 0.50;             // ধাপ-১ হার
+  const p2 = gEff <= 9 ? 0.70 : 0.75;             // ধাপ-২ হার
+  const L = {};
+
+  L.l1a = basic;                                  // ১(ক) গৃহীত মূল বেতন
+  L.l1b = pp;                                     // ১(খ) পিপি
+  L.l2  = L.l1a + L.l1b;                          // ২ = ১ক + ১খ
+
+  if (special || g === 1) {
+    // অনুচ্ছেদ ৫(গ): নির্ধারিত বেতন – ৫(ক),(খ) প্রযোজ্য নয়, ইনক্রিমেন্টও নেই
+    const fixed = special ? special.pay : NEW[1][0];
+    L.fixedPost = true;
+    L.l3 = L.l4 = null;
+    L.l5 = L.l6 = L.l7 = L.l8 = fixed;
+    L.l16 = fixed;
+  } else {
+    const oldS = OLD[g], newS = NEW[g], last = newS.length - 1;
+    L.l3 = oldS[0];                               // ২০১৫ স্কেলের শুরুর ধাপ
+    L.l4 = L.l2 - L.l3;                           // পার্থক্য
+    L.l5 = newS[0];                               // ২০২৬ স্কেলের শুরুর ধাপ
+    L.l6 = L.l5 + L.l4;                           // ৫ + ৪
+    let idx = newS.findIndex(v => v >= L.l6);     // সমান ধাপ, নইলে পরবর্তী উচ্চতর ধাপ
+    if (idx === -1) { idx = last; w.push("নির্ধারিত অঙ্ক নতুন স্কেলের সর্বোচ্চ ধাপ ছাড়িয়ে গেছে; সর্বোচ্চ ধাপ ধরা হয়েছে। গেজেট দেখে মিলিয়ে নিন।"); }
+    L.l7 = newS[idx];
+    if (idx + 1 > last) w.push("আপনি স্কেলের শেষ ধাপে আছেন; ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই, তাই ইনক্রিমেন্ট যোগ হয়নি।");
+    L.l8 = newS[Math.min(idx + 1, last)];         // ৯(২): ১ জুলাই ২০২৬ এ ১টি ইনক্রিমেন্ট
+    if (idx + 2 > last && idx + 1 <= last) w.push("১ জুলাই ২০২৭ এর ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই; সর্বোচ্চ ধাপ ধরা হয়েছে।");
+    L.l16 = newS[Math.min(idx + 2, last)];        // ১ জুলাই ২০২৭: ০৮ এর পরবর্তী ধাপ
+
+    if (gh) {
+      // মূল স্কেলে বেতন নির্ধারণ (অনুচ্ছেদ ৫) শেষ; এখন উচ্চতর গ্রেডের ২০২৬ স্কেলে ধাপ
+      const hs = NEW[gh], hl = hs.length - 1;
+      const mainStep = L.l7, mainInc = L.l8;
+      L.hg = { gh, mainStep, mainInc, method: hg.method };
+      const firstAtLeast = v => { const i = hs.findIndex(x => x >= v); return i === -1 ? hl : i; };
+      let i7, i8;
+      if (hg.method === "B") { i7 = firstAtLeast(mainStep); i8 = firstAtLeast(mainInc); }
+      else if (hg.method === "C") { i7 = Math.max(0, hs.indexOf(Number(hg.manual))); i8 = Math.min(i7 + 1, hl); }
+      else { i7 = firstAtLeast(mainStep); i8 = Math.min(i7 + 1, hl); }
+      L.l7 = hs[i7]; L.l8 = hs[i8]; L.l16 = hs[Math.min(i8 + 1, hl)];
+      if (i8 === hl) w.push("উচ্চতর গ্রেডের স্কেলের শেষ ধাপে পৌঁছেছে; পরবর্তী ইনক্রিমেন্টের ধাপ নেই।");
+      w.push("উচ্চতর গ্রেডে ধাপ নির্ধারণের সূত্র গেজেটে সুনির্দিষ্ট নয়; বেছে নেওয়া পদ্ধতি অনুযায়ী হিসাব দেখানো হয়েছে। ৪০%/৫০% হার উচ্চতর গ্রেড (গ্রেড " + bnNum.format(gh) + ") ধরে প্রয়োগ হয়েছে। আপনার অফিসের আদেশের সঙ্গে মিলিয়ে নিন।");
+    }
+  }
+
+  L.l9  = L.l1a;                                  // ৩০ জুন ২০২৬ আহরিত মূল বেতন
+  L.l10 = L.l8 - L.l9;                            // পার্থক্য (৮-৯)
+  L.l11 = Math.round(L.l10 * p1);                 // ৪০% / ৫০%
+  L.l12 = L.l1a;
+  L.l13 = L.l12 + L.l11;                          // ১ জুলাই ২০২৬
+  L.l14 = Math.round(L.l10 * p2);                 // ৭০% / ৭৫%
+  L.l15 = L.l12 + L.l14;                          // ১ জানুয়ারি ২০২৭
+  L.p1 = p1; L.p2 = p2; L.g = gEff; L.gDrawn = g; L.warn = w;
+  return L;
+}
+
+/* ===== উচ্চতর গ্রেড: প্রাপ্যতার সময়সূচি (অনুচ্ছেদ ৬) ===== */
+const bnP = new Intl.NumberFormat("bn-BD", { useGrouping: false });
+const bnDate = d => (d.getDate() < 10 ? "০" : "") + bnP.format(d.getDate()) + "-" + (d.getMonth() < 9 ? "০" : "") + bnP.format(d.getMonth() + 1) + "-" + bnP.format(d.getFullYear());
+const addYears = (d, n) => new Date(d.getFullYear() + n, d.getMonth(), d.getDate());
+const toDate = s => { if (!s) return null; const [y, m, dd] = s.split("-").map(Number); return new Date(y, m - 1, dd); };
+
+function hgTimeline(o) {
+  const J26 = new Date(2026, 6, 1);
+  const ms = [], notes = [];
+  const gm = o.gMain, tgt = k => gm - k;
+  const step = (k, d, why) => {
+    const t = tgt(k), from = gm - (k - 1);
+    const ordinal = ["", "১ম", "২য়", "৩য়"][k];
+    if (t < 4) ms.push({ no: true, t: ordinal + " উচ্চতর গ্রেড: প্রযোজ্য নয়", d: "এই সুবিধা ৪র্থ গ্রেড পর্যন্ত; গ্রেড " + bnP.format(from) + " থেকে গ্রেড " + bnP.format(t) + " এ যাওয়া যাবে না (অনুচ্ছেদ ৬(৩))।" });
+    else ms.push({ t: ordinal + " উচ্চতর গ্রেড — " + bnDate(d), d: "গ্রেড " + bnP.format(from) + " → গ্রেড " + bnP.format(t) + (why ? ". " + why : ""), date: d });
+    return t >= 4;
+  };
+  if (o.cnt >= 2) {
+    notes.push("আগের বেতনস্কেলে একই পদে ২ বা তার বেশি উচ্চতর গ্রেড/টাইম স্কেল/সিলেকশন গ্রেড পেয়ে থাকলে ওই পদে থাকাকালে ২০২৬ অনুযায়ী আর উচ্চতর গ্রেড প্রাপ্য নয় (অনুচ্ছেদ ৬(৪))।");
+    if (o.blocked) notes.push("ব্লকড পদের ৩য় গ্রেড (৬(৬)) বলা হয়েছে ৬(১), ৬(২) ও ৬(৫) এর অধীনে দুটি উচ্চতর গ্রেড পাওয়ার পর। আপনার ক্ষেত্রে ৬(৪) এর সাথে এর সম্পর্ক নিয়ে মন্ত্রণালয়ের ব্যাখ্যা নিন।");
+    return { ms, notes };
+  }
+  let d1 = null, d2 = null;
+  if (o.cnt === 0) {
+    if (!o.start) { notes.push("এই পদে যোগদান বা শেষ পদোন্নতির তারিখ দিন।"); return { ms, notes }; }
+    const e8 = addYears(o.start, 8), e10 = addYears(o.start, 10);
+    if (e8 <= J26) {
+      if (e10 > J26) { d1 = J26; notes.push("১ জুলাই ২০২৬ এর আগে ৮ বছর পূর্ণ হয়েছে কিন্তু ১০ বছর হয়নি — অনুচ্ছেদ ৬(১) এর শর্তাংশ অনুযায়ী ১ জুলাই ২০২৬ থেকে উচ্চতর গ্রেড প্রাপ্য।"); }
+      else { notes.push("১ জুলাই ২০২৬ এর আগেই ১০ বছর পূর্ণ হয়েছে। এটি গেজেটের ৮–১০ বছরের শর্তাংশের আওতায় পড়ে না। ২০১৫ আদেশে ১০ বছরে উচ্চতর গ্রেড পাওয়ার কথা ছিল; পেয়ে থাকলে সংখ্যা ঘরে ১টি দিন, না পেয়ে থাকলে অফিস/মন্ত্রণালয়ের সঙ্গে নিশ্চিত হোন।"); return { ms, notes }; }
+    } else d1 = e8;
+    if (step(1, d1, d1.getTime() === J26.getTime() ? "কার্যকর ১ জুলাই ২০২৬ থেকে (পদোন্নতি হিসেবে গণ্য নয়)" : "৮ বছর পূর্তিতে ৯ম বছরের শুরুতে (পদোন্নতি হিসেবে গণ্য নয়)")) d2 = addYears(d1, 6); else return { ms, notes };
+    if (step(2, d2, "১ম উচ্চতর গ্রেডের ৬ বছর পূর্তিতে ৭ম বছরে")) { /* ok */ } else return { ms, notes };
+  } else { // cnt === 1
+    if (!o.first) { notes.push("প্রথম উচ্চতর গ্রেড পাওয়ার তারিখ দিন।"); return { ms, notes }; }
+    let raw = addYears(o.first, 6); d2 = raw < J26 ? J26 : raw;
+    if (raw < J26) notes.push("৬ বছর ইতোমধ্যে পূর্ণ; ২য় উচ্চতর গ্রেড ১ জুলাই ২০২৬ থেকে ধরা হয়েছে। ৩০ জুন ২০২৬ বা তার আগের সময়ের কোনো বকেয়া নেই (অনুচ্ছেদ ৬(৫))।");
+    if (!step(2, d2, "৬ বছর পূর্তিতে ৭ম বছরে")) return { ms, notes };
+  }
+  if (o.blocked) {
+    const d3 = addYears(d2, 8);
+    step(3, d3, "ব্লকড পদ: ২য় গ্রেডের ৮ বছর পূর্তিতে ৯ম বছরে। সমগ্র চাকরিজীবনে একই পদে সর্বোচ্চ ৩ বার");
+  } else notes.push("সাধারণ পদে একই পদে উচ্চতর গ্রেড সর্বোচ্চ ২ বার পাওয়া যায় (অনুচ্ছেদ ৬(৪))।");
+  notes.push("চাকরি সন্তোষজনক হতে হবে এবং একই পদে পদোন্নতি ছাড়া থাকতে হবে। মঞ্জুরি মন্ত্রণালয়/নিয়োগকারী কর্তৃপক্ষের অফিস আদেশে হয়।");
+  return { ms, notes };
+}
+
+function renderHg() {
+  const o = { gMain: Number($("hgMain").value), cnt: Number($("hgCnt").value), start: toDate($("hgStart").value), first: toDate($("hgFirst").value), blocked: $("hgBlocked").checked };
+  const r = hgTimeline(o);
+  $("hgOut").innerHTML =
+    (r.ms.length ? r.ms.map(m => `<div class="ms${m.no ? " no" : ""}"><b>${m.t}</b><br><span class="note">${m.d}</span></div>`).join("") : "") +
+    r.notes.map(t => `<div class="warn">${t}</div>`).join("") +
+    (r.ms.some(m => m.date && m.date.getTime() === new Date(2026, 6, 1).getTime())
+      ? `<div class="note">১ জুলাই ২০২৬ থেকে প্রাপ্য গ্রেডে বেতন দেখতে উপরে "১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য" টিক দিন এবং "গ্রেড" ঘরে ৩০ জুন ২০২৬-এর বেতনের গ্রেড রাখুন।</div>` : "");
+  $("hgCard").classList.remove("hidden");
+}
+function fillHgMain() {
+  const s = $("hgMain"); if (!s.options.length) { for (let g = 1; g <= 20; g++) { const o = document.createElement("option"); o.value = g; o.textContent = "গ্রেড " + bnNum.format(g); s.appendChild(o); } }
+  if (!s.dataset.touched) { const gr = SPECIAL[$("grade").value] ? 1 : Number($("grade").value); s.value = Math.min(20, gr + Number($("hgCnt").value || 0)); }
+}
+function fillHgManual() {
+  const g = SPECIAL[$("grade").value] ? 1 : Number($("grade").value), sel = $("hgManual"); sel.innerHTML = "";
+  if (g >= 5) NEW[g - 1].forEach(v => { const o = document.createElement("option"); o.value = v; o.textContent = fmt(v); sel.appendChild(o); });
+}
+
+/* ===== ফর্ম প্রস্তুত ===== */
+function fillGrades() {
+  const s = $("grade");
+  for (let g = 1; g <= 20; g++) {
+    const o = document.createElement("option");
+    o.value = g; o.textContent = "গ্রেড " + bnNum.format(g);
+    s.appendChild(o);
+  }
+  Object.keys(SPECIAL).forEach(k => {
+    const o = document.createElement("option");
+    o.value = k; o.textContent = SPECIAL[k].label; s.appendChild(o);
+  });
+  s.value = "5";
+}
+function fillBasics() {
+  const g = $("grade").value, sp = SPECIAL[g];
+  const isFixed = sp || g === "1";
+  $("basicManualWrap").classList.toggle("hidden", !sp);
+  $("basicWrap").classList.toggle("hidden", !!sp);
+  const sel = $("basicSel"); sel.innerHTML = "";
+  if (!sp) {
+    OLD[g].forEach((v, i) => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = fmt(v) + (i === 0 ? " (সর্বনিম্ন)" : i === OLD[g].length - 1 ? " (সর্বশেষ)" : "");
+      sel.appendChild(o);
+    });
+  }
+}
+
+/* ===== ধাপ ৪: ০১ জানুয়ারি ২০২৮ থেকে নতুন গেজেটের ভাতা (অনুচ্ছেদ ১২–২৮) ===== */
+// বাড়ি ভাড়া ভাতা, অনুচ্ছেদ ১৫(৬): [গ্রেড ১৬–২০, ১০–১৫, ৫–৯, ১–৪ ও তদূর্ধ্ব]
+const HRA28 = { dhaka: [0.60, 0.50, 0.45, 0.40], city: [0.50, 0.40, 0.35, 0.30], other: [0.45, 0.35, 0.30, 0.25] };
+function stage4Allowances(g, basic, o) {
+  const items = [];
+  const band = g >= 16 ? 0 : g >= 10 ? 1 : g >= 5 ? 2 : 3;
+  const pc = x => bnNum.format(Math.round(x * 100)) + "%";
+  if (o.area === "gov") items.push(["বাড়ি ভাড়া ভাতা (সরকারি বাসস্থান)", 0]);
+  else { const r = HRA28[o.area][band]; items.push(["বাড়ি ভাড়া ভাতা (" + pc(r) + ")", Math.round(basic * r)]); }
+  items.push(["চিকিৎসা ভাতা", o.over50 ? 4000 : 3000]);                 // অনুচ্ছেদ ১৩
+  if (o.kids) items.push(["শিক্ষা সহায়ক ভাতা", o.kids * 500]);          // অনুচ্ছেদ ১৮ (সর্বোচ্চ ১,০০০)
+  if (g >= 11 && !o.lunch) items.push(["টিফিন ভাতা", 500]);              // অনুচ্ছেদ ১৯
+  if (g >= 11 && o.cityCorp) items.push(["যাতায়াত ভাতা", 600]);         // অনুচ্ছেদ ২১
+  items.push(["মোবাইল ভাতা", g <= 5 ? 500 : 150]);                       // অনুচ্ছেদ ২২
+  if (o.wash) items.push(["ধোলাই ভাতা", 300]);                           // অনুচ্ছেদ ২৩
+  if (o.chg) items.push(["কার্যভার ভাতা", 1500]);                        // অনুচ্ছেদ ২০
+  if (o.sk) items.push(["বিশেষ চাহিদাসম্পন্ন সন্তান ভাতা", o.sk * 3000]); // অনুচ্ছেদ ২৮
+  const cap = { hillSadar: 5000, hillOther: 5500, haor: 5000 }[o.zone];  // অনুচ্ছেদ ২৫, ২৬
+  if (cap) items.push([o.zone === "haor" ? "হাওর/দ্বীপ/চর ভাতা (২০%)" : "পাহাড়ি ভাতা (২০%)", Math.min(Math.round(basic * 0.20), cap)]);
+  if (o.other) items.push(["অন্যান্য ভাতা", o.other]);
+  return { items, total: items.reduce((s, x) => s + x[1], 0) };
+}
+
+/* ===== ফলাফল দেখানো ===== */
+function row(k, text, v, cls) {
+  return `<tr class="${cls || ""}"><td class="k">${k}</td><td>${text}</td><td class="n">${v}</td></tr>`;
+}
+function render() {
+  const grade = $("grade").value, sp = SPECIAL[grade];
+  const basic = sp ? val("basicManual") : Number($("basicSel").value);
+  const pp = val("pp");
+  const msgs = $("msgs"); msgs.innerHTML = "";
+  if (!basic) { msgs.innerHTML = '<div class="warn">মূল বেতনের অঙ্ক দিন।</div>'; return; }
+
+  const hgState = { on: $("hgNow").checked, method: $("hgMethod").value, manual: $("hgManual").value };
+  const L = calculate(grade, basic, pp, hgState);
+  L.warn.forEach(t => msgs.insertAdjacentHTML("beforeend", `<div class="warn">${t}</div>`));
+
+  const na = "প্রযোজ্য নয়";
+  const pct = x => bnNum.format(Math.round(x * 100)) + "%";
+  const gLabel = sp ? sp.label : (L.hg ? "গ্রেড " + bnNum.format(L.gDrawn) + " (উচ্চতর গ্রেড: গ্রেড " + bnNum.format(L.g) + ")" : "গ্রেড " + bnNum.format(L.g));
+  $("stmtHead").textContent = gLabel + " | ৩০ জুন ২০২৬ এর মূল বেতন: " + fmt(basic);
+
+  $("stmt").innerHTML =
+    row("০১", "জাতীয় বেতন স্কেল ২০১৫ অনুযায়ী ৩০ জুন ২০২৬ তারিখে", "") +
+    row("", "ক) গৃহীত মূল বেতন", fmt(L.l1a), "sub") +
+    row("", "খ) পিপি (যদি থাকে)", fmt(L.l1b), "sub") +
+    row("০২", "মোট বেতন (১ক + ১খ)", fmt(L.l2)) +
+    row("০৩", "২০১৫ স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)", L.fixedPost ? na : fmt(L.l3)) +
+    row("০৪", "পার্থক্য (২ − ৩)", L.fixedPost ? na : fmt(L.l4)) +
+    row("০৫", "২০২৬ স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)", fmt(L.l5)) +
+    row("০৬", "০১ জুলাই ২০২৬ তারিখে মোট মূল বেতন নির্ধারণ (৫ + ৪)", fmt(L.l6)) +
+    (L.hg ? row("০৬ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") ধাপ: ৬ নং এর সমান বা পরবর্তী ধাপ", fmt(L.hg.mainStep), "sub") : "") +
+    row("০৭", L.hg ? "উচ্চতর গ্রেড (গ্রেড " + bnNum.format(L.g) + ") এর ২০২৬ স্কেলে ০১ জুলাই ২০২৬ প্রাপ্য বেতনের ধাপ" : "২০২৬ স্কেলে ০১ জুলাই ২০২৬ প্রাপ্য বেতনের ধাপ (৬ নং এর সমান বা পরবর্তী ধাপ)", fmt(L.l7)) +
+    row("০৮", "০১ জুলাই ২০২৬ একটি ইনক্রিমেন্টসহ প্রকৃত মূল বেতন (৯(২) ধারা)", fmt(L.l8), "hl") +
+    row("০৯", "২০১৫ স্কেলে ৩০ জুন ২০২৬ আহরিত মূল বেতন", fmt(L.l9)) +
+    row("১০", "পার্থক্য (৮ − ৯)", fmt(L.l10)) +
+    row("১১", "১০ নং পার্থক্যের " + pct(L.p1) + " (" + (L.g <= 9 ? "১ম–৯ম" : "১০ম–২০তম") + " গ্রেড)", fmt(L.l11)) +
+    row("১২", "২০১৫ স্কেলে ৩০ জুন ২০২৬ গৃহীত মূল বেতন", fmt(L.l12)) +
+    row("১৩", "০১ জুলাই ২০২৬ তারিখে কার্যকরী প্রাপ্য মূল বেতন (১২ + ১১)", fmt(L.l13), "hl") +
+    row("১৪", "১০ নং পার্থক্যের " + pct(L.p2), fmt(L.l14)) +
+    row("১৫", "০১ জানুয়ারি ২০২৭ তারিখে কার্যকরী প্রাপ্য মূল বেতন (১২ + ১৪)", fmt(L.l15), "hl") +
+    row("১৬", "০১ জুলাই ২০২৭ তারিখে প্রাপ্য মূল বেতন (০৮ নং এর পরবর্তী ধাপ)", fmt(L.l16), "hl");
+
+  // মাসিক ভাতা (৩০ জুন ২০২৬ এর অঙ্কে স্থির)
+  const allow = val("hra") + val("med") + val("edu") + val("tif") + val("conv") + val("chg") + val("wash") + val("oth");
+  const gpf = val("gpf");
+  const stages = [
+    { t: "ধাপ ১", d: "০১-০৭-২০২৬ থেকে ৩১-১২-২০২৬", b: L.l13 },
+    { t: "ধাপ ২", d: "০১-০১-২০২৭ থেকে ৩০-০৬-২০২৭", b: L.l15 },
+    { t: "ধাপ ৩", d: "০১-০৭-২০২৭ থেকে ৩১-১২-২০২৭", b: L.l16 }
+  ];
+  $("stages").innerHTML = stages.map(s => {
+    const gross = s.b + allow, net = gross - gpf;
+    return `<div class="stage"><h3>${s.t}</h3><small>${s.d}</small>
+      <div class="big">${fmt(s.b)}</div><small>মূল বেতন</small>
+      <div class="row"><span>মোট ভাতা</span><span>${fmt(allow)}</span></div>
+      <div class="row"><span>মোট বেতন (গ্রস)</span><span>${fmt(gross)}</span></div>
+      <div class="row"><span>কর্তন</span><span>− ${fmt(gpf)}</span></div>
+      <div class="row total"><span>নিট প্রাপ্য</span><span>${fmt(net)}</span></div></div>`;
+  }).join("");
+
+  $("annual").innerHTML =
+    `<div class="row"><span>উৎসব ভাতা (প্রতিটি)</span><span>${fmt(L.l1a)}</span></div>` +
+    `<div class="row"><span>বাংলা নববর্ষ ভাতা (২০%)</span><span>${fmt(Math.round(L.l1a * 0.20))}</span></div>`;
+
+  // ধাপ ৪: ০১ জানুয়ারি ২০২৮ থেকে (মূল বেতন = ০১ জুলাই ২০২৭ এর প্রাপ্য মূল বেতন)
+  const o4 = { area: $("area").value, over50: $("age").value === "o50", kids: Number($("kids").value), sk: Number($("sk").value),
+    zone: $("zone").value, cityCorp: $("cityCorp").checked, lunch: $("lunch").checked, wash: $("wash4").checked,
+    chg: $("chg4").checked, other: val("oth4") };
+  const b4 = L.l16, a4 = stage4Allowances(L.g, b4, o4);
+  const gross4 = b4 + a4.total, net4 = gross4 - gpf;
+  const s3 = stages[2], net3 = s3.b + allow - gpf, diff = net4 - net3;
+  $("s4head").textContent = gLabel + " | মূল বেতন (০১-০৭-২০২৭ থেকে চলমান): " + fmt(b4);
+  $("s4tab").innerHTML =
+    row("", "মূল বেতন", fmt(b4)) +
+    a4.items.map(x => row("", x[0], fmt(x[1]), "sub")).join("") +
+    row("", "মোট ভাতা", fmt(a4.total), "sum") +
+    row("", "মোট বেতন (গ্রস)", fmt(gross4), "sum") +
+    row("", "কর্তন", "− " + fmt(gpf)) +
+    row("", "নিট প্রাপ্য (মাসিক)", fmt(net4), "net");
+  $("s4cmp").innerHTML =
+    `<div class="row"><span>ধাপ ৩ এর নিট (৩১-১২-২০২৭ পর্যন্ত)</span><span>${fmt(net3)}</span></div>` +
+    `<div class="row"><span>ধাপ ৪ এর নিট (০১-০১-২০২৮ থেকে)</span><span>${fmt(net4)}</span></div>` +
+    `<div class="row total"><span>মাসিক পরিবর্তন</span><span class="up">${diff >= 0 ? "+ " : "− "}${fmt(Math.abs(diff))}</span></div>` +
+    `<div class="row"><span>বাংলা নববর্ষ ভাতা (১৫%, বছরে ১টি)</span><span>${fmt(Math.round(b4 * 0.15))}</span></div>` +
+    `<div class="row"><span>উৎসব ভাতা (প্রতিটি ১টি মূল বেতনের সমান)</span><span>${fmt(b4)}</span></div>`;
+  $("s4note").textContent = "ভাতার হার গেজেটের অনুচ্ছেদ ১২–২৮ অনুযায়ী। মূল বেতন ১ জুলাই ২০২৮ এ পরবর্তী ইনক্রিমেন্টে আবার বাড়বে — তা এখানে ধরা হয়নি।";
+  $("stage4Card").classList.remove("hidden");
+
+  // স্কেল টেবিল (যাচাইয়ের জন্য)
+  if (!sp && L.g !== 1) {
+    $("scaleView").innerHTML = `<p><b>২০১৫ (গ্রেড ${bnNum.format(L.gDrawn)}):</b> ${OLD[L.gDrawn].join(" – ")}</p><p><b>২০২৬ (গ্রেড ${bnNum.format(L.gDrawn)}):</b> ${NEW[L.gDrawn].join(" – ")}</p>` + (L.hg ? `<p><b>২০২৬ উচ্চতর গ্রেড (গ্রেড ${bnNum.format(L.g)}):</b> ${NEW[L.g].join(" – ")}</p>` : "");
+  } else { $("scaleView").textContent = "এই পদের বেতন নির্ধারিত (একক অঙ্ক)।"; }
+
+  if ($("hgStart").value || $("hgFirst").value || Number($("hgCnt").value) >= 2) renderHg();
+  $("stmtCard").classList.remove("hidden");
+  $("stageCard").classList.remove("hidden");
+  $("stmtCard").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+fillGrades(); fillBasics();
+fillHgMain(); fillHgManual();
+$("grade").addEventListener("change", () => { fillBasics(); fillHgMain(); fillHgManual(); });
+$("hgMain").addEventListener("change", () => { $("hgMain").dataset.touched = "1"; });
+$("hgCnt").addEventListener("change", () => { $("hgFirstWrap").classList.toggle("hidden", $("hgCnt").value !== "1"); fillHgMain(); });
+$("hgNow").addEventListener("change", () => { $("hgNowBox").classList.toggle("hidden", !$("hgNow").checked); });
+$("hgMethod").addEventListener("change", () => { $("hgManualWrap").classList.toggle("hidden", $("hgMethod").value !== "C"); });
+$("hgBtn").addEventListener("click", () => { renderHg(); $("hgCard").scrollIntoView({ behavior: "smooth", block: "start" }); });
+$("calcBtn").addEventListener("click", render);
+</script>
+</body>
+</html>
