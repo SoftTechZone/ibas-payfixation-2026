@@ -36,6 +36,9 @@ td.n{text-align:right;white-space:nowrap;font-weight:600}
 td.k{width:2.2em;color:var(--muted)}
 tr.sub td{padding-left:22px}
 tr.hl td{background:var(--soft)}
+tr.grp td{font-weight:700;color:var(--brand);padding-top:14px;border-bottom:1px solid var(--line)}
+tr.grp td.k,tr.grp td.n{display:none}
+tr.grp td:not(.k):not(.n){padding-left:0}
 .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media (max-width:700px){.stages{grid-template-columns:1fr}}
 .stage{border:1px solid var(--line);border-radius:12px;padding:12px}
@@ -62,9 +65,37 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 .ms{border-left:3px solid var(--brand);padding:6px 10px;margin:8px 0;background:var(--card);border-radius:0 8px 8px 0}
 .ms b{color:var(--brand)}
 .ms.no{border-left-color:#b45309}
+.gov{font-family:"Noto Sans Bengali","Kalpurush","SolaimanLipi",serif;font-size:.92rem;line-height:1.65;color:#000}
+.gov h3{text-align:center;margin:0 0 2px;font-size:1.02rem}
+.gov .sub{text-align:center;margin:0 0 14px;font-size:1rem;font-weight:700}
+.gov .idrow{display:flex;gap:6px;margin:4px 0}
+.gov .idrow .no{width:1.6em}
+.gov .idrow .lb{flex:none}
+.gov .idrow .dots{flex:1;border-bottom:1px dotted #000;margin:0 6px;min-height:1.1em}
+.gov .idrow .vv{font-weight:700}
+.gov .line{display:flex;gap:8px;margin:5px 0;align-items:baseline}
+.gov .line .no{width:1.8em;flex:none}
+.gov .line .lb{flex:1}
+.gov .line .cl{flex:none;padding:0 4px}
+.gov .line .vv{flex:none;min-width:6em;text-align:right;font-weight:600}
+.gov .line.b .lb,.gov .line.b .vv{font-weight:700}
+.gov .sect{text-decoration:underline;font-weight:700;margin:16px 0 6px}
+.gov .fp{margin:2px 0}
+.gov .sig{margin-top:34px;text-align:right}
+.gov .sig .l{display:inline-block;border-top:1px solid #000;padding-top:4px;min-width:220px;text-align:center}
+.gov .verihead{text-align:center;text-decoration:underline;font-weight:700;margin:22px 0 10px}
+.gov .verirow{display:flex;justify-content:space-between;margin:6px 0}
+.gov .veripara{margin:10px 0;text-align:justify}
+.gov .sig3{display:flex;justify-content:space-between;margin-top:40px;text-align:center}
+.gov .sig3 div{border-top:1px solid #000;padding-top:4px;width:31%}
+.gov .idbox{border-bottom:1px dotted #000;font-weight:700;display:inline-block;min-width:10em;padding:0 4px}
+@page{size:A4;margin:14mm 12mm}
 @media print{
-  header,.noprint,.ad,footer .noprint{display:none!important}
+  header,.noprint,.ad,footer{display:none!important}
   body{background:#fff;color:#000} .card{border:0;padding:0}
+  #officialCard{display:none}
+  body.print-official main>.card:not(#officialCard){display:none!important}
+  body.print-official #officialCard{display:block!important;margin:0;padding:0}
 }
 </style>
 </head>
@@ -77,6 +108,12 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 <main>
   <section class="card noprint" id="inputCard">
     <h2>১) আপনার তথ্য দিন</h2>
+    <p class="note">বেতন নির্ধারণী বিবরণী ফরমে ছাপার জন্য (ঐচ্ছিক)</p>
+    <div class="grid">
+      <div><label for="offName">দপ্তরের নাম</label><input id="offName" type="text" placeholder="যেমন: জনস্বাস্থ্য প্রকৌশল অধিদপ্তর"></div>
+      <div><label for="empName">কর্মকর্তা/কর্মচারীর নাম</label><input id="empName" type="text"></div>
+      <div><label for="desig">বর্তমান পদবি</label><input id="desig" type="text"></div>
+    </div>
     <label for="grade">গ্রেড</label>
     <select id="grade"></select>
 
@@ -194,6 +231,13 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
     <div id="hgOut"></div>
   </section>
 
+  <section class="card hidden" id="officialCard">
+    <div class="noprint" style="margin-bottom:12px">
+      <button class="btn2" id="govPrintBtn">সরকারি ফরম প্রিন্ট / PDF (১৬ লাইন, এক পাতা)</button>
+    </div>
+    <div class="gov" id="govForm"></div>
+  </section>
+
   <section class="card">
     <h2>সতর্কতা</h2>
     <p class="note">এটি একটি সহায়ক হিসাবের টুল। গেজেট অনুযায়ী চূড়ান্ত বেতন নির্ধারণ iBAS++ অনলাইন সিস্টেমে (Pay Fixation) জমা দিয়ে ডিডিও ও হিসাবরক্ষণ অফিসের অনুমোদনে হয়। বেতন ও ভাতার হিসাব অফিসিয়াল গেজেটের সঙ্গে মিলিয়ে নিন। ১ জুলাই ২০২৬ থেকে আদেশ জারির তারিখ পর্যন্ত বকেয়া আলাদাভাবে হিসাব হবে। উচ্চতর গ্রেডের ক্ষেত্রে গেজেটে প্রাপ্যতার শর্ত স্পষ্ট, কিন্তু উচ্চতর গ্রেডের ধাপ নির্ধারণের সূত্র সুনির্দিষ্ট নয়; তাই ওই অংশ আপনার অফিসের আদেশের সঙ্গে মিলিয়ে নিন। ধাপ ৪-এ ১ জুলাই ২০২৮ এর পরবর্তী বার্ষিক ইনক্রিমেন্ট ধরা হয়নি; ২০২৮ সালের ভাতার হার গেজেটের অনুচ্ছেদ ১২–২৮ থেকে নেওয়া।</p>
@@ -218,6 +262,7 @@ const SPECIAL = {
 /* ===== ছোট সহায়ক ফাংশন ===== */
 const bnNum = new Intl.NumberFormat("bn-BD");
 const fmt = n => "৳ " + bnNum.format(n);
+const pctG = x => bnNum.format(Math.round(x * 100)) + "%";
 const $ = id => document.getElementById(id);
 const val = id => Math.max(0, Number($(id).value) || 0);
 
@@ -233,8 +278,8 @@ function calculate(grade, basic, pp, hg) {
     else gh = g - 1;
   }
   const gEff = gh || g;                           // যে গ্রেডের স্কেলে বেতন নির্ধারিত হবে
-  const p1 = gEff <= 9 ? 0.40 : 0.50;             // ধাপ-১ হার
-  const p2 = gEff <= 9 ? 0.70 : 0.75;             // ধাপ-২ হার
+  const p1 = gEff <= 9 ? 0.40 : 0.50;             // ধাপ-১ হার (বেতনবৃদ্ধির প্রথম অংশ)
+  const p2 = (1 - p1) / 2;                        // পরবর্তী ও অবশিষ্ট অংশের হার (সমান দুই ভাগে বাকি অংশ)
   const L = {};
 
   L.l1a = basic;                                  // ১(ক) গৃহীত মূল বেতন
@@ -278,13 +323,16 @@ function calculate(grade, basic, pp, hg) {
     }
   }
 
-  L.l9  = L.l1a;                                  // ৩০ জুন ২০২৬ আহরিত মূল বেতন
-  L.l10 = L.l8 - L.l9;                            // পার্থক্য (৮-৯)
+  L.l9  = L.l2;                                   // সিরিয়াল ১: মূল বেতন (পিপিসহ) — ছবির লজিক অনুযায়ী এটিই একমাত্র ভিত্তি
+  // অনুচ্ছেদ ৩(১)(ক) ব্যাখ্যা: পার্থক্য = "জাতীয় বেতনস্কেল ২০২৬ এ নির্ধারিত বেতন" (৯ নং, ইনক্রিমেন্টের পূর্বে মেলানো ধাপ) − বর্তমান বেতন (১১ নং)।
+  // ইনক্রিমেন্ট (৯(২) ধারা, ১০ নং − ৯ নং) ৪০%/৫০% বণ্টনের সাথে মেশানো হয় না; তা বণ্টনের পর একবার যোগ হয় — সরকারি iBAS++ ফিক্সেশন ফরমের অনুসরণে।
+  L.l10 = L.l7 - L.l9;                            // পার্থক্য (৯ − ১১)
+  L.lInc = L.l8 - L.l7;                           // ইনক্রিমেন্টের পরিমাণ (১০ − ৯)
   L.l11 = Math.round(L.l10 * p1);                 // ৪০% / ৫০%
-  L.l12 = L.l1a;
-  L.l13 = L.l12 + L.l11;                          // ১ জুলাই ২০২৬
-  L.l14 = Math.round(L.l10 * p2);                 // ৭০% / ৭৫%
-  L.l15 = L.l12 + L.l14;                          // ১ জানুয়ারি ২০২৭
+  L.l12 = L.l2;                                   // সিরিয়াল ১: মূল বেতন (পিপিসহ)
+  L.l13 = L.l12 + L.l11 + L.lInc;                 // ১ জুলাই ২০২৬: আহরিত + ৪০%/৫০% + ইনক্রিমেন্ট
+  L.l14 = Math.round(L.l10 * p2);                 // "পরবর্তী" অংশ (০১ জানুয়ারি ২০২৭)
+  L.l15 = L.l13 + L.l14;                          // ১ জানুয়ারি ২০২৭: ১১ নং + "পরবর্তী" অংশ
   L.p1 = p1; L.p2 = p2; L.g = gEff; L.gDrawn = g; L.warn = w;
   return L;
 }
@@ -410,6 +458,57 @@ function stage4Allowances(g, basic, o) {
 function row(k, text, v, cls) {
   return `<tr class="${cls || ""}"><td class="k">${k}</td><td>${text}</td><td class="n">${v}</td></tr>`;
 }
+
+/* ===== অফিসিয়াল বেতন নির্ধারণী বিবরণী (১৬ লাইন, iBAS++/অর্থ বিভাগের পে-ফিক্সেশন ফরম্যাট) — প্রিন্ট/PDF এর জন্য ===== */
+function govLine(no, label, value, bold) {
+  return `<div class="line${bold ? " b" : ""}"><span class="no">${no}।</span><span class="lb">${label}</span><span class="cl">:</span><span class="vv">${value}</span></div>`;
+}
+function renderGovForm(L, na, gLabel, meta) {
+  const band = L.g <= 9 ? "১ম–৯ম" : "১০ম–২০তম";
+  const hdr = (lb, vv) => `<div class="idrow"><span class="lb">${lb} :</span><span class="dots"><span class="vv">${vv || "&nbsp;"}</span></span></div>`;
+  const pctAmt = (p, amt) => pctG(p) + " (৳ " + bnNum.format(amt) + ")";
+  const sr10 = L.l9 + L.l11, q3 = L.l8 - L.l15;
+  let html = "";
+  html += `<h3>এস.আর.ও. নং ৩৪৭-আইন/২০২৬, তারিখ: ১৭-০৯-২০২৬</h3>`;
+  html += `<div class="sub">জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী বেতন নির্ধারণী বিবরণী</div>`;
+  html += hdr("দপ্তরের নাম", meta.office);
+  html += hdr("কর্মকর্তা/কর্মচারীর নাম", meta.name);
+  html += hdr("বর্তমান পদবি", meta.desig ? meta.desig + " (" + gLabel + ")" : gLabel);
+  html += `<div style="height:6px"></div>`;
+  html += `<div class="sect">৩০-০৬-২০২৬</div>`;
+  html += govLine("১", "মূল বেতন" + (L.l1b ? " (পিপিসহ)" : ""), fmt(L.l2));
+  html += govLine("২", "প্রারম্ভিক ধাপ (২০১৫ স্কেল)", L.fixedPost ? na : fmt(L.l3));
+  html += govLine("৩", "পার্থক্য [১ − ২]", L.fixedPost ? na : fmt(L.l4));
+  html += `<div class="sect">০১-০৭-২০২৬</div>`;
+  html += govLine("৪", "প্রারম্ভিক ধাপ (২০২৬ স্কেল)", fmt(L.l5));
+  html += govLine("৫", "যোগ [৩ + ৪]", fmt(L.l6));
+  if (L.hg) html += govLine("৫ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") সমধাপ/উচ্চ ধাপ", fmt(L.hg.mainStep));
+  html += govLine("৬", (L.hg ? "উচ্চতর গ্রেডের (গ্রেড " + bnNum.format(L.g) + ") " : "") + "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]", fmt(L.l7));
+  html += govLine("৭", "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), true);
+  html += govLine("৮", "বেতনবৃদ্ধির পরিমাণ [৬ − ১]", fmt(L.l10));
+  html += govLine("৯", "বেতনবৃদ্ধির " + pctAmt(L.p1, L.l11) + " [" + band + " গ্রেড]", fmt(L.l11));
+  html += govLine("১০", "প্রাপ্য বেতন [১ + ৯]", fmt(sr10));
+  html += govLine("১১", "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ প্রাপ্য বেতন [১০ + ইনক্রিমেন্ট ৳" + bnNum.format(L.lInc) + "]", fmt(L.l13), true);
+  html += `<div class="sect">০১-০১-২০২৭</div>`;
+  html += govLine("১২", "পরবর্তী " + pctAmt(L.p2, L.l14) + " বেতনবৃদ্ধি [৮ এর অংশ]", fmt(L.l14));
+  html += govLine("১৩", "প্রাপ্য বেতন [১১ + ১২]", fmt(L.l15), true);
+  html += `<div class="sect">০১-০৭-২০২৭</div>`;
+  html += govLine("১৪", "অবশিষ্ট " + pctAmt(L.p2, q3) + " বেতনবৃদ্ধি [৮ এর অংশ]", fmt(q3));
+  html += govLine("১৫", "প্রাপ্য বেতন [১৩ + ১৪]", fmt(L.l8), true);
+  html += govLine("১৬", "বার্ষিক বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ প্রাপ্য মূল বেতন", fmt(L.l16), true);
+  html += `<div class="fp" style="margin-top:4px">পরবর্তী বেতন বৃদ্ধির তারিখ: ০১ জুলাই ২০২৮</div>`;
+  html += `<div class="sect">ভাতাদির প্রাপ্যতা:</div>`;
+  html += `<div class="fp">১। বাড়িভাড়া ভাতা: ৩০ জুন ২০২৬ তারিখে আহরিত মূল বেতনের হিসেবে প্রাপ্য বাড়িভাড়া ভাতা ৩১ ডিসেম্বর ২০২৭ পর্যন্ত প্রাপ্য হইবেন।</div>`;
+  html += `<div class="fp">২। চিকিৎসা ভাতা, নববর্ষ ভাতা, শিক্ষা সহায়ক ভাতা, ধোলাই ভাতা, টিফিন ভাতা, যাতায়াত ভাতাসহ অন্যান্য ভাতাদি ৩১ ডিসেম্বর ২০২৭ পর্যন্ত প্রাপ্য হইবেন।</div>`;
+  html += `<div class="fp">৩। জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী সকল ভাতাদি ১ জানুয়ারি ২০২৮ তারিখে প্রাপ্য হইবেন।</div>`;
+  html += `<div class="sig"><span class="l">দপ্তর প্রধানের স্বাক্ষর ও সীল</span></div>`;
+  html += `<div class="verihead">বেতন নির্ধারণী হিসাবরক্ষণ অফিসে ব্যবহারের জন্য</div>`;
+  html += `<div class="verirow"><span>ভেরিফিকেশন সূত্র নং: <span class="idbox">&nbsp;</span></span><span>তারিখ: <span class="idbox">&nbsp;</span></span></div>`;
+  html += `<div class="veripara">উক্ত বিবরণী পরীক্ষা করা হইলো। জাতীয় বেতন স্কেল, ২০২৬-এর ০১/০৭/২০২৬ হইতে ৩০/০৬/২০২৭ তারিখ পর্যন্ত ${band} গ্রেডের ${pctG(L.p1)} বেতন বৃদ্ধিতে টাকা: <span class="idbox">&nbsp;</span> স্কেলে মূল বেতন টাকা: <span class="idbox">&nbsp;</span> (কথায়: <span class="idbox">&nbsp;</span>) নির্ধারণ করা হইলো। ০১/০৭/২০২৬ হইতে ৩১/১২/২০২৬ পর্যন্ত টাকা: <span class="idbox">&nbsp;</span> (কথায়: <span class="idbox">&nbsp;</span>) নির্ধারণ করা হইলো এবং ০১/০১/২০২৭ হইতে ৩০/০৬/২০২৭ পর্যন্ত টাকা: <span class="idbox">&nbsp;</span> (কথায়: <span class="idbox">&nbsp;</span>) নির্ধারণ করা হইলো। উল্লেখ্য, জাতীয় বেতন স্কেল, ২০২৬ অনুযায়ী সকল ভাতাদি ০১/০১/২০২৮ তারিখ হইতে প্রাপ্য হইবেন।</div>`;
+  html += `<div class="sig3"><div>অডিটর/এসএ/সহ: হিসাবরক্ষক</div><div>হিসাবরক্ষক</div><div>সহকারী পরিচালক/উপপরিচালক</div></div>`;
+  $("govForm").innerHTML = html;
+  $("officialCard").classList.remove("hidden");
+}
 function render() {
   const grade = $("grade").value, sp = SPECIAL[grade];
   const basic = sp ? val("basicManual") : Number($("basicSel").value);
@@ -426,26 +525,32 @@ function render() {
   const gLabel = sp ? sp.label : (L.hg ? "গ্রেড " + bnNum.format(L.gDrawn) + " (উচ্চতর গ্রেড: গ্রেড " + bnNum.format(L.g) + ")" : "গ্রেড " + bnNum.format(L.g));
   $("stmtHead").textContent = gLabel + " | ৩০ জুন ২০২৬ এর মূল বেতন: " + fmt(basic);
 
+  // ১৬-লাইন বেতন নির্ধারণী বিবরণী (iBAS++/অর্থ বিভাগের পে-ফিক্সেশন ফরম্যাট অনুযায়ী)
+  const band = L.g <= 9 ? "১ম–৯ম" : "১০ম–২০তম";
+  const pctAmt = (p, amt) => pct(p) + " (৳ " + bnNum.format(amt) + ")";
+  const sr10 = L.l9 + L.l11, q3 = L.l8 - L.l15;
   $("stmt").innerHTML =
-    row("০১", "জাতীয় বেতন স্কেল ২০১৫ অনুযায়ী ৩০ জুন ২০২৬ তারিখে", "") +
-    row("", "ক) গৃহীত মূল বেতন", fmt(L.l1a), "sub") +
-    row("", "খ) পিপি (যদি থাকে)", fmt(L.l1b), "sub") +
-    row("০২", "মোট বেতন (১ক + ১খ)", fmt(L.l2)) +
-    row("০৩", "২০১৫ স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)", L.fixedPost ? na : fmt(L.l3)) +
-    row("০৪", "পার্থক্য (২ − ৩)", L.fixedPost ? na : fmt(L.l4)) +
-    row("০৫", "২০২৬ স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)", fmt(L.l5)) +
-    row("০৬", "০১ জুলাই ২০২৬ তারিখে মোট মূল বেতন নির্ধারণ (৫ + ৪)", fmt(L.l6)) +
-    (L.hg ? row("০৬ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") ধাপ: ৬ নং এর সমান বা পরবর্তী ধাপ", fmt(L.hg.mainStep), "sub") : "") +
-    row("০৭", L.hg ? "উচ্চতর গ্রেড (গ্রেড " + bnNum.format(L.g) + ") এর ২০২৬ স্কেলে ০১ জুলাই ২০২৬ প্রাপ্য বেতনের ধাপ" : "২০২৬ স্কেলে ০১ জুলাই ২০২৬ প্রাপ্য বেতনের ধাপ (৬ নং এর সমান বা পরবর্তী ধাপ)", fmt(L.l7)) +
-    row("০৮", "০১ জুলাই ২০২৬ একটি ইনক্রিমেন্টসহ প্রকৃত মূল বেতন (৯(২) ধারা)", fmt(L.l8), "hl") +
-    row("০৯", "২০১৫ স্কেলে ৩০ জুন ২০২৬ আহরিত মূল বেতন", fmt(L.l9)) +
-    row("১০", "পার্থক্য (৮ − ৯)", fmt(L.l10)) +
-    row("১১", "১০ নং পার্থক্যের " + pct(L.p1) + " (" + (L.g <= 9 ? "১ম–৯ম" : "১০ম–২০তম") + " গ্রেড)", fmt(L.l11)) +
-    row("১২", "২০১৫ স্কেলে ৩০ জুন ২০২৬ গৃহীত মূল বেতন", fmt(L.l12)) +
-    row("১৩", "০১ জুলাই ২০২৬ তারিখে কার্যকরী প্রাপ্য মূল বেতন (১২ + ১১)", fmt(L.l13), "hl") +
-    row("১৪", "১০ নং পার্থক্যের " + pct(L.p2), fmt(L.l14)) +
-    row("১৫", "০১ জানুয়ারি ২০২৭ তারিখে কার্যকরী প্রাপ্য মূল বেতন (১২ + ১৪)", fmt(L.l15), "hl") +
-    row("১৬", "০১ জুলাই ২০২৭ তারিখে প্রাপ্য মূল বেতন (০৮ নং এর পরবর্তী ধাপ)", fmt(L.l16), "hl");
+    row("", "৩০-০৬-২০২৬", "", "grp") +
+    row("১", "মূল বেতন" + (L.l1b ? " (পিপিসহ)" : ""), fmt(L.l2)) +
+    row("২", "প্রারম্ভিক ধাপ (২০১৫ স্কেল)", L.fixedPost ? na : fmt(L.l3)) +
+    row("৩", "পার্থক্য [১ − ২]", L.fixedPost ? na : fmt(L.l4)) +
+    row("", "০১-০৭-২০২৬", "", "grp") +
+    row("৪", "প্রারম্ভিক ধাপ (২০২৬ স্কেল)", fmt(L.l5)) +
+    row("৫", "যোগ [৩ + ৪]", fmt(L.l6)) +
+    (L.hg ? row("৫ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") সমধাপ/উচ্চ ধাপ", fmt(L.hg.mainStep), "sub") : "") +
+    row("৬", (L.hg ? "উচ্চতর গ্রেডের (গ্রেড " + bnNum.format(L.g) + ") " : "") + "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]", fmt(L.l7)) +
+    row("৭", "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), "hl") +
+    row("৮", "বেতনবৃদ্ধির পরিমাণ [৬ − ১]", fmt(L.l10)) +
+    row("৯", "বেতনবৃদ্ধির " + pctAmt(L.p1, L.l11) + " [" + band + " গ্রেড]", fmt(L.l11)) +
+    row("১০", "প্রাপ্য বেতন [১ + ৯]", fmt(sr10)) +
+    row("১১", "ইনক্রিমেন্ট সহ প্রাপ্য বেতন [১০ + ইনক্রিমেন্ট ৳" + bnNum.format(L.lInc) + "]", fmt(L.l13), "hl") +
+    row("", "০১-০১-২০২৭", "", "grp") +
+    row("১২", "পরবর্তী " + pctAmt(L.p2, L.l14) + " বেতনবৃদ্ধি [৮ এর অংশ]", fmt(L.l14)) +
+    row("১৩", "প্রাপ্য বেতন [১১ + ১২]", fmt(L.l15), "hl") +
+    row("", "০১-০৭-২০২৭", "", "grp") +
+    row("১৪", "অবশিষ্ট " + pctAmt(L.p2, q3) + " বেতনবৃদ্ধি [৮ এর অংশ]", fmt(q3)) +
+    row("১৫", "প্রাপ্য বেতন [১৩ + ১৪]", fmt(L.l8), "hl") +
+    row("১৬", "বার্ষিক বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ প্রাপ্য মূল বেতন", fmt(L.l16), "hl");
 
   // মাসিক ভাতা (৩০ জুন ২০২৬ এর অঙ্কে স্থির)
   const allow = val("hra") + val("med") + val("edu") + val("tif") + val("conv") + val("chg") + val("wash") + val("oth");
@@ -498,6 +603,8 @@ function render() {
     $("scaleView").innerHTML = `<p><b>২০১৫ (গ্রেড ${bnNum.format(L.gDrawn)}):</b> ${OLD[L.gDrawn].join(" – ")}</p><p><b>২০২৬ (গ্রেড ${bnNum.format(L.gDrawn)}):</b> ${NEW[L.gDrawn].join(" – ")}</p>` + (L.hg ? `<p><b>২০২৬ উচ্চতর গ্রেড (গ্রেড ${bnNum.format(L.g)}):</b> ${NEW[L.g].join(" – ")}</p>` : "");
   } else { $("scaleView").textContent = "এই পদের বেতন নির্ধারিত (একক অঙ্ক)।"; }
 
+  renderGovForm(L, na, gLabel, { office: $("offName").value.trim(), name: $("empName").value.trim(), desig: $("desig").value.trim() });
+
   if ($("hgStart").value || $("hgFirst").value || Number($("hgCnt").value) >= 2) renderHg();
   $("stmtCard").classList.remove("hidden");
   $("stageCard").classList.remove("hidden");
@@ -513,6 +620,11 @@ $("hgNow").addEventListener("change", () => { $("hgNowBox").classList.toggle("hi
 $("hgMethod").addEventListener("change", () => { $("hgManualWrap").classList.toggle("hidden", $("hgMethod").value !== "C"); });
 $("hgBtn").addEventListener("click", () => { renderHg(); $("hgCard").scrollIntoView({ behavior: "smooth", block: "start" }); });
 $("calcBtn").addEventListener("click", render);
+$("govPrintBtn").addEventListener("click", () => {
+  document.body.classList.add("print-official");
+  window.print();
+});
+window.addEventListener("afterprint", () => document.body.classList.remove("print-official"));
 </script>
 </body>
 </html>
