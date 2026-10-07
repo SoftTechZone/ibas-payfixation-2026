@@ -129,6 +129,10 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
     <label for="pp">পিপি – পার্সোনাল পে (যদি থাকে)</label>
     <input id="pp" type="number" inputmode="numeric" min="0" value="0">
 
+    <label for="joinDate">চাকরিতে যোগদানের তারিখ <span style="color:#dc2626">*</span></label>
+    <input id="joinDate" type="date" required>
+    <p class="note">বার্ষিক ইনক্রিমেন্ট সঠিকভাবে হিসাব করতে এটি আবশ্যক — যোগদানের তারিখ থেকে ৩০ জুন পর্যন্ত ন্যূনতম ৬ মাস চাকরি পূর্ণ না হলে সেই বছরের ইনক্রিমেন্ট প্রযোজ্য নয় (অনুচ্ছেদ ৯)।</p>
+
     <details class="hg" id="hgBox">
       <summary>উচ্চতর গ্রেড (৮ ও ১৪ বছর) — গেজেটের অনুচ্ছেদ ৬</summary>
       <p class="note" style="margin-top:8px">২০১৫ সালে ১০ ও ১৬ বছরে উচ্চতর গ্রেড ছিল। ২০২৬ গেজেটে একই পদে ৮ বছর পূর্তিতে (৯ম বছরে) ১ম এবং তার ৬ বছর পর (৭ম বছরে) ২য় উচ্চতর গ্রেড। ব্লকড পদে (পদোন্নতির বিধান নেই) ২য় গ্রেডের ৮ বছর পর ৩য় গ্রেড। এই সুবিধা ৪র্থ গ্রেড পর্যন্ত; ৩য় বা তার ওপরের গ্রেডে যাওয়া যাবে না।</p>
@@ -267,8 +271,15 @@ const $ = id => document.getElementById(id);
 const val = id => Math.max(0, Number($(id).value) || 0);
 
 /* ===== মূল হিসাব (এই ফাংশনই ফর্মের ১৬টি লাইনের ফর্মুলা) ===== */
-function calculate(grade, basic, pp, hg) {
+function calculate(grade, basic, pp, hg, joinDate) {
   const w = [];                                   // সতর্কবার্তা
+  // অনুচ্ছেদ ৯(১)+(২) এর শর্তাংশ: যোগদানের তারিখ হতে প্রতিটি ১ জুলাই পর্যন্ত ন্যূনতম ৬ মাস
+  // চাকরিকাল পূর্ণ না হলে সেই বছরের বার্ষিক বেতনবৃদ্ধি (ইনক্রিমেন্ট) প্রাপ্য নয়।
+  const qual26 = !!(joinDate && joinDate <= new Date(2026, 0, 1));   // ১ জুলাই ২০২৬ এর জন্য যোগ্য
+  const qual27 = !!(joinDate && joinDate <= new Date(2027, 0, 1));   // ১ জুলাই ২০২৭ এর জন্য যোগ্য
+  const s1 = qual26 ? 1 : 0, s2 = qual27 ? 1 : 0;
+  if (!qual26) w.push("যোগদানের তারিখ অনুযায়ী ৩০ জুন ২০২৬ পর্যন্ত ৬ (ছয়) মাস চাকরিকাল পূর্ণ হয়নি (অনুচ্ছেদ ৯(২) এর শর্তাংশ), তাই ১ জুলাই ২০২৬ তারিখে এই হিসাবে কোনো বার্ষিক বেতনবৃদ্ধি (ইনক্রিমেন্ট) যোগ হয়নি।");
+  if (!qual27) w.push("১ জুলাই ২০২৭ পর্যন্তও ৬ মাস চাকরিকাল পূর্ণ হবে না বলে ধরা হয়েছে, তাই ২০২৭ এর বার্ষিক বেতনবৃদ্ধিও এই হিসাবে যোগ হয়নি।");
   const special = SPECIAL[grade];
   const g = special ? 1 : Number(grade);
   // উচ্চতর গ্রেড (অনুচ্ছেদ ৬): ১ জুলাই ২০২৬ থেকে পরবর্তী উচ্চতর গ্রেড; ৪র্থ গ্রেডের ওপরে যাওয়া যাবে না (৬(৩))
@@ -302,10 +313,10 @@ function calculate(grade, basic, pp, hg) {
     let idx = newS.findIndex(v => v >= L.l6);     // সমান ধাপ, নইলে পরবর্তী উচ্চতর ধাপ
     if (idx === -1) { idx = last; w.push("নির্ধারিত অঙ্ক নতুন স্কেলের সর্বোচ্চ ধাপ ছাড়িয়ে গেছে; সর্বোচ্চ ধাপ ধরা হয়েছে। গেজেট দেখে মিলিয়ে নিন।"); }
     L.l7 = newS[idx];
-    if (idx + 1 > last) w.push("আপনি স্কেলের শেষ ধাপে আছেন; ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই, তাই ইনক্রিমেন্ট যোগ হয়নি।");
-    L.l8 = newS[Math.min(idx + 1, last)];         // ৯(২): ১ জুলাই ২০২৬ এ ১টি ইনক্রিমেন্ট
-    if (idx + 2 > last && idx + 1 <= last) w.push("১ জুলাই ২০২৭ এর ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই; সর্বোচ্চ ধাপ ধরা হয়েছে।");
-    L.l16 = newS[Math.min(idx + 2, last)];        // ১ জুলাই ২০২৭: ০৮ এর পরবর্তী ধাপ
+    if (s1 && idx + 1 > last) w.push("আপনি স্কেলের শেষ ধাপে আছেন; ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই, তাই ইনক্রিমেন্ট যোগ হয়নি।");
+    L.l8 = newS[Math.min(idx + s1, last)];        // ৯(২): যোগ্য হলে ১ জুলাই ২০২৬ এ ১টি ইনক্রিমেন্ট, নইলে একই ধাপে থাকবে
+    if (s2 && idx + s1 + 1 > last && idx + s1 <= last) w.push("১ জুলাই ২০২৭ এর ইনক্রিমেন্টের জন্য পরবর্তী ধাপ নেই; সর্বোচ্চ ধাপ ধরা হয়েছে।");
+    L.l16 = newS[Math.min(idx + s1 + s2, last)];  // ১ জুলাই ২০২৭ পর্যন্ত মোট অর্জিত ধাপ (যোগ্যতাসাপেক্ষে)
 
     if (gh) {
       // মূল স্কেলে বেতন নির্ধারণ (অনুচ্ছেদ ৫) শেষ; এখন উচ্চতর গ্রেডের ২০২৬ স্কেলে ধাপ
@@ -313,12 +324,14 @@ function calculate(grade, basic, pp, hg) {
       const mainStep = L.l7, mainInc = L.l8;
       L.hg = { gh, mainStep, mainInc, method: hg.method };
       const firstAtLeast = v => { const i = hs.findIndex(x => x >= v); return i === -1 ? hl : i; };
-      let i7, i8;
-      if (hg.method === "B") { i7 = firstAtLeast(mainStep); i8 = firstAtLeast(mainInc); }
-      else if (hg.method === "C") { i7 = Math.max(0, hs.indexOf(Number(hg.manual))); i8 = Math.min(i7 + 1, hl); }
-      else { i7 = firstAtLeast(mainStep); i8 = Math.min(i7 + 1, hl); }
-      L.l7 = hs[i7]; L.l8 = hs[i8]; L.l16 = hs[Math.min(i8 + 1, hl)];
-      if (i8 === hl) w.push("উচ্চতর গ্রেডের স্কেলের শেষ ধাপে পৌঁছেছে; পরবর্তী ইনক্রিমেন্টের ধাপ নেই।");
+      let i7, i8f;
+      if (hg.method === "B") { i7 = firstAtLeast(mainStep); i8f = firstAtLeast(mainInc); }
+      else if (hg.method === "C") { i7 = Math.max(0, hs.indexOf(Number(hg.manual))); i8f = Math.min(i7 + 1, hl); }
+      else { i7 = firstAtLeast(mainStep); i8f = Math.min(i7 + 1, hl); }
+      const i8 = qual26 ? i8f : i7;                 // ৬ মাসের শর্ত পূরণ না হলে ২০২৬ এ ধাপ অপরিবর্তিত
+      const i16 = Math.min(i8 + s2, hl);             // ২০২৭ এ যোগ্য হলে আরও ১ ধাপ
+      L.l7 = hs[i7]; L.l8 = hs[i8]; L.l16 = hs[i16];
+      if (qual26 && i8 === hl) w.push("উচ্চতর গ্রেডের স্কেলের শেষ ধাপে পৌঁছেছে; পরবর্তী ইনক্রিমেন্টের ধাপ নেই।");
       w.push("উচ্চতর গ্রেডে ধাপ নির্ধারণের সূত্র গেজেটে সুনির্দিষ্ট নয়; বেছে নেওয়া পদ্ধতি অনুযায়ী হিসাব দেখানো হয়েছে। ৪০%/৫০% হার উচ্চতর গ্রেড (গ্রেড " + bnNum.format(gh) + ") ধরে প্রয়োগ হয়েছে। আপনার অফিসের আদেশের সঙ্গে মিলিয়ে নিন।");
     }
   }
@@ -515,9 +528,11 @@ function render() {
   const pp = val("pp");
   const msgs = $("msgs"); msgs.innerHTML = "";
   if (!basic) { msgs.innerHTML = '<div class="warn">মূল বেতনের অঙ্ক দিন।</div>'; return; }
+  if (!$("joinDate").value) { msgs.innerHTML = '<div class="warn">চাকরিতে যোগদানের তারিখ দিন — বার্ষিক ইনক্রিমেন্ট সঠিকভাবে হিসাব করতে এটি আবশ্যক।</div>'; return; }
 
   const hgState = { on: $("hgNow").checked, method: $("hgMethod").value, manual: $("hgManual").value };
-  const L = calculate(grade, basic, pp, hgState);
+  const joinDate = toDate($("joinDate").value);
+  const L = calculate(grade, basic, pp, hgState, joinDate);
   L.warn.forEach(t => msgs.insertAdjacentHTML("beforeend", `<div class="warn">${t}</div>`));
 
   const na = "প্রযোজ্য নয়";
