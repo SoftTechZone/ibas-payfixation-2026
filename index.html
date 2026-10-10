@@ -62,6 +62,21 @@ footer{text-align:center;color:var(--muted);font-size:.82rem;padding:18px 12px 3
 details.hg{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:14px}
 details.hg[open]{background:var(--soft)}
 details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.req{color:#fff;background:#dc2626;font-weight:700;border-radius:999px;padding:0 6px;margin-right:4px;font-size:.85em}
+.req-row{background:#0088cc;color:#0a0a0a;border:1px solid #0077b3;border-left:4px solid #dc2626;border-radius:0 8px 8px 0;padding:8px 10px;display:block;margin:6px 0}
+.req-row,.req-row :not(.req){color:#0a0a0a!important}
+.hg-now-label{color:#9a3412;background:#ffedd5;border:1px solid #fdba74;border-radius:8px;padding:6px 10px;display:inline-block;font-weight:700}
+.hg-verify-btn{background:#d97706;color:#fff;font-weight:700;border:none;box-shadow:0 2px 8px rgba(217,119,6,.35);font-size:1rem;padding:12px 18px}
+.hg-verify-btn:hover{background:#b45309}
+.modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:16px}
+.modal-backdrop.hidden{display:none}
+.modal-box{background:var(--card);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow:auto;padding:20px;box-shadow:0 24px 64px rgba(0,0,0,.35);animation:popIn .18s ease-out}
+@keyframes popIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.modal-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.modal-actions button{flex:1;min-width:140px;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:1rem;cursor:pointer}
+.btn-yes{background:#15803d;color:#fff}
+.btn-no{background:#b91c1c;color:#fff}
+.btn-close{background:var(--soft);color:var(--ink)}
 .ms{border-left:3px solid var(--brand);padding:6px 10px;margin:8px 0;background:var(--card);border-radius:0 8px 8px 0}
 .ms b{color:var(--brand)}
 .ms.no{border-left-color:#b45309}
@@ -95,6 +110,7 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
   body{background:#fff;color:#000} .card{border:0;padding:0}
   #officialCard{display:none}
   body.print-official main>.card:not(#officialCard){display:none!important}
+  body.print-official #msgs{display:none!important}
   body.print-official #officialCard{display:block!important;margin:0;padding:0}
 }
 </style>
@@ -109,8 +125,9 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
   <section class="card noprint" id="inputCard">
     <h2>১) আপনার তথ্য দিন</h2>
     <p class="note">বেতন নির্ধারণী বিবরণী ফরমে ছাপার জন্য (ঐচ্ছিক)</p>
+    <p class="note" style="color:#dc2626">লাল তারকা (<span style="color:#dc2626">*</span>) চিহ্নিত ঘর অবশ্যই পূরণ করতে হবে — নইলে হিসাব আটকে যাবে বা ভুল ফল আসতে পারে।</p>
     <div class="grid">
-      <div><label for="offName">দপ্তরের নাম</label><input id="offName" type="text" placeholder="যেমন: জনস্বাস্থ্য প্রকৌশল অধিদপ্তর"></div>
+      <div><label for="offName">অফিস, অধিদপ্তর/পরিদপ্তর, মন্ত্রণালয়/বিভাগ এর নাম</label><input id="offName" type="text" placeholder="যেমন: জনস্বাস্থ্য প্রকৌশল অধিদপ্তর"></div>
       <div><label for="empName">কর্মকর্তা/কর্মচারীর নাম</label><input id="empName" type="text"></div>
       <div><label for="desig">বর্তমান পদবি</label><input id="desig" type="text"></div>
     </div>
@@ -129,7 +146,7 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
     <label for="pp">পিপি – পার্সোনাল পে (যদি থাকে)</label>
     <input id="pp" type="number" inputmode="numeric" min="0" value="0">
 
-    <label for="joinDate">চাকরিতে যোগদানের তারিখ <span style="color:#dc2626">*</span></label>
+    <label for="joinDate" class="req-row"><span class="req">*</span> চাকরিতে যোগদানের তারিখ</label>
     <input id="joinDate" type="date" required>
     <p class="note">বার্ষিক ইনক্রিমেন্ট সঠিকভাবে হিসাব করতে এটি আবশ্যক — যোগদানের তারিখ থেকে ৩০ জুন পর্যন্ত ন্যূনতম ৬ মাস চাকরি পূর্ণ না হলে সেই বছরের ইনক্রিমেন্ট প্রযোজ্য নয় (অনুচ্ছেদ ৯)।</p>
 
@@ -138,24 +155,19 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
       <p class="note" style="margin-top:8px">২০১৫ সালে ১০ ও ১৬ বছরে উচ্চতর গ্রেড ছিল। ২০২৬ গেজেটে একই পদে ৮ বছর পূর্তিতে (৯ম বছরে) ১ম এবং তার ৬ বছর পর (৭ম বছরে) ২য় উচ্চতর গ্রেড। ব্লকড পদে (পদোন্নতির বিধান নেই) ২য় গ্রেডের ৮ বছর পর ৩য় গ্রেড। এই সুবিধা ৪র্থ গ্রেড পর্যন্ত; ৩য় বা তার ওপরের গ্রেডে যাওয়া যাবে না।</p>
       <div class="grid">
         <div><label for="hgMain">পদের মূল গ্রেড (মূল স্কেল)</label><select id="hgMain"></select></div>
-        <div><label for="hgCnt">৩০ জুন ২০২৬ পর্যন্ত এই পদে পাওয়া উচ্চতর গ্রেড / টাইম স্কেল / সিলেকশন গ্রেড</label>
-          <select id="hgCnt"><option value="0">একটিও পাইনি</option><option value="1">১টি পেয়েছি</option><option value="2">২টি বা বেশি পেয়েছি</option></select></div>
-        <div><label for="hgStart">এই পদে যোগদান / শেষ পদোন্নতির তারিখ</label><input type="date" id="hgStart"></div>
-        <div id="hgFirstWrap" class="hidden"><label for="hgFirst">প্রথম উচ্চতর গ্রেড পাওয়ার তারিখ</label><input type="date" id="hgFirst"></div>
+        <div><label for="hgCnt" class="req-row"><span class="req">*</span> ৩০ জুন ২০২৬ পর্যন্ত এই পদে পাওয়া উচ্চতর গ্রেড / টাইম স্কেল / সিলেকশন গ্রেড</label>
+          <select id="hgCnt" required><option value="" selected disabled>— নির্বাচন করুন —</option><option value="0">একটিও পাইনি</option><option value="1">১টি পেয়েছি</option><option value="2">২টি বা বেশি পেয়েছি</option></select></div>
+        <div><label for="hgStart" class="req-row"><span class="req">*</span> এই পদে যোগদান / শেষ পদোন্নতির তারিখ</label><input type="date" id="hgStart"></div>
+        <div id="hgFirstWrap" class="hidden"><label for="hgFirst" class="req-row"><span class="req">*</span> প্রথম উচ্চতর গ্রেড পাওয়ার তারিখ</label><input type="date" id="hgFirst"></div>
       </div>
       <label class="chk"><input type="checkbox" id="hgBlocked"> ব্লকড পদ — পদোন্নতির কোনো সুযোগ নেই (৩য় উচ্চতর গ্রেডের জন্য)</label>
-      <button type="button" class="btn2" id="hgBtn">প্রাপ্যতার সময়সূচি দেখুন</button>
+      <label class="chk req-row"><input type="checkbox" id="hgSatisfactory"> <span class="req">*</span> আমি নিশ্চিত করছি আমার চাকরিকাল সন্তোষজনক হিসেবে গণ্য — কোনো বিভাগীয় মামলা/শাস্তিমূলক ব্যবস্থা/বিরূপ মন্তব্য নেই</label>
+      <button type="button" class="hg-verify-btn" id="hgBtn">🔍 প্রাপ্যতার সময়সূচি যাচাই করুন</button>
       <hr>
-      <label class="chk"><input type="checkbox" id="hgNow"> ১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য — বেতন সেই গ্রেডে হিসাব করুন</label>
+      <label class="chk"><input type="checkbox" id="hgNow" disabled> <span class="hg-now-label">১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য — বেতন সেই গ্রেডে হিসাব করুন</span></label>
+      <div id="hgNowStatus" class="note">উপরের তথ্য পূরণ করে "প্রাপ্যতার সময়সূচি যাচাই করুন" চাপলে, যোগ্য হলে তবেই এই চেকবক্সটি সক্রিয় হবে।</div>
       <div id="hgNowBox" class="hidden">
-        <p class="note">উপরের "গ্রেড" ঘরে ৩০ জুন ২০২৬ তারিখে আপনি যে গ্রেডের স্কেলে বেতন পেতেন সেটি দিন (অনুচ্ছেদ ৪)। উচ্চতর গ্রেড হবে তার ঠিক পরবর্তী গ্রেড। গেজেটে এই গ্রেডের ধাপ কীভাবে ঠিক হবে তার সূত্র আলাদা করে দেওয়া নেই, তাই পদ্ধতিটি আপনার অফিসের আদেশ অনুযায়ী বেছে নিন।</p>
-        <label for="hgMethod">উচ্চতর গ্রেডে ধাপ নির্ধারণের পদ্ধতি</label>
-        <select id="hgMethod">
-          <option value="A">ক) মূল স্কেলের ধাপ (৭ নং) এর সমান বা পরবর্তী ধাপ, তারপর ১টি ইনক্রিমেন্ট</option>
-          <option value="B">খ) ইনক্রিমেন্টসহ ধাপ (মূল স্কেলের ৮ নং) এর সমান বা পরবর্তী ধাপ</option>
-          <option value="C">গ) আমি নিজে ধাপ বেছে নেব</option>
-        </select>
-        <div id="hgManualWrap" class="hidden"><label for="hgManual">উচ্চতর গ্রেডের ২০২৬ স্কেলের ধাপ (৭ নং)</label><select id="hgManual"></select></div>
+        <p class="note">উপরের "গ্রেড" ঘরে ৩০ জুন ২০২৬ তারিখে আপনি যে গ্রেডের স্কেলে বেতন পেতেন সেটি দিন (অনুচ্ছেদ ৪)। উচ্চতর গ্রেড হবে তার ঠিক পরবর্তী গ্রেড। হিসাব পদ্ধতি: প্রথমে মূল স্কেলে সমধাপ ও ইনক্রিমেন্ট সহ ধাপ (৬ ও ৭ নং) নির্ণয় করা হয়, তারপর সেই ইনক্রিমেন্ট সহ অঙ্কের ভিত্তিতে উচ্চতর গ্রেডের স্কেলে সমধাপ/পরবর্তী ধাপ নির্ধারণ করা হয় — iBAS++ এর প্রকৃত হিসাবের সাথে মিলিয়ে যাচাই করা।</p>
       </div>
     </details>
 
@@ -230,10 +242,13 @@ details.hg hr{border:0;border-top:1px solid var(--line);margin:12px 0}
     <p class="note" id="s4note" style="margin-top:8px"></p>
   </section>
 
-  <section class="card hidden" id="hgCard">
-    <h2>উচ্চতর গ্রেডের প্রাপ্যতা (অনুচ্ছেদ ৬)</h2>
-    <div id="hgOut"></div>
-  </section>
+  <div class="modal-backdrop hidden" id="hgModalBackdrop">
+    <section class="card modal-box" id="hgCard">
+      <h2>উচ্চতর গ্রেডের প্রাপ্যতা (অনুচ্ছেদ ৬)</h2>
+      <div id="hgOut"></div>
+      <div class="modal-actions" id="hgModalActions"></div>
+    </section>
+  </div>
 
   <section class="card hidden" id="officialCard">
     <div class="noprint" style="margin-bottom:12px">
@@ -319,20 +334,19 @@ function calculate(grade, basic, pp, hg, joinDate) {
     L.l16 = newS[Math.min(idx + s1 + s2, last)];  // ১ জুলাই ২০২৭ পর্যন্ত মোট অর্জিত ধাপ (যোগ্যতাসাপেক্ষে)
 
     if (gh) {
-      // মূল স্কেলে বেতন নির্ধারণ (অনুচ্ছেদ ৫) শেষ; এখন উচ্চতর গ্রেডের ২০২৬ স্কেলে ধাপ
+      // মূল স্কেলে বেতন নির্ধারণ (অনুচ্ছেদ ৫) ও ইনক্রিমেন্ট (৬,৭ নং) ইতিমধ্যে হয়ে গেছে — এটাই L.l7/L.l8।
+      // এখন সেই ইনক্রিমেন্ট সহ অঙ্কের (mainInc) ভিত্তিতে উচ্চতর গ্রেডের স্কেলে সমধাপ/পরবর্তী ধাপ নির্ধারণ।
       const hs = NEW[gh], hl = hs.length - 1;
       const mainStep = L.l7, mainInc = L.l8;
-      L.hg = { gh, mainStep, mainInc, method: hg.method };
       const firstAtLeast = v => { const i = hs.findIndex(x => x >= v); return i === -1 ? hl : i; };
-      let i7, i8f;
-      if (hg.method === "B") { i7 = firstAtLeast(mainStep); i8f = firstAtLeast(mainInc); }
-      else if (hg.method === "C") { i7 = Math.max(0, hs.indexOf(Number(hg.manual))); i8f = Math.min(i7 + 1, hl); }
-      else { i7 = firstAtLeast(mainStep); i8f = Math.min(i7 + 1, hl); }
-      const i8 = qual26 ? i8f : i7;                 // ৬ মাসের শর্ত পূরণ না হলে ২০২৬ এ ধাপ অপরিবর্তিত
-      const i16 = Math.min(i8 + s2, hl);             // ২০২৭ এ যোগ্য হলে আরও ১ ধাপ
-      L.l7 = hs[i7]; L.l8 = hs[i8]; L.l16 = hs[i16];
-      if (qual26 && i8 === hl) w.push("উচ্চতর গ্রেডের স্কেলের শেষ ধাপে পৌঁছেছে; পরবর্তী ইনক্রিমেন্টের ধাপ নেই।");
-      w.push("উচ্চতর গ্রেডে ধাপ নির্ধারণের সূত্র গেজেটে সুনির্দিষ্ট নয়; বেছে নেওয়া পদ্ধতি অনুযায়ী হিসাব দেখানো হয়েছে। ৪০%/৫০% হার উচ্চতর গ্রেড (গ্রেড " + bnNum.format(gh) + ") ধরে প্রয়োগ হয়েছে। আপনার অফিসের আদেশের সঙ্গে মিলিয়ে নিন।");
+      const i8 = firstAtLeast(mainInc);              // উচ্চতর গ্রেডে সমধাপ/পরবর্তী ধাপ (মূল স্কেলের ইনক্রিমেন্ট সহ ধাপ অনুযায়ী)
+      const i16 = Math.min(i8 + s2, hl);              // ১ জুলাই ২০২৭: যোগ্য হলে আরও ১ (ordinary) ধাপ
+      L.hg = { gh, mainStep, mainInc };
+      L.l7 = mainStep;                                // রো ৬ অপরিবর্তিত থাকে — মূল স্কেলের সমধাপ, উচ্চতর গ্রেডে রূপান্তরিত হয় না
+      L.l8 = hs[i8];                                   // রো ৭ — উচ্চতর গ্রেডে নির্ধারিত ধাপ
+      L.l16 = hs[i16];
+      if (i8 === hl) w.push("উচ্চতর গ্রেডের স্কেলের শেষ ধাপে পৌঁছেছে; পরবর্তী ইনক্রিমেন্টের ধাপ নেই।");
+      w.push("উচ্চতর গ্রেড (গ্রেড " + bnNum.format(gh) + "): মূল স্কেলে সমধাপ ও ইনক্রিমেন্ট সহ ধাপ নির্ণয় করে, সেই ইনক্রিমেন্ট সহ অঙ্কের (৳" + bnNum.format(mainInc) + ") ভিত্তিতে উচ্চতর গ্রেডের স্কেলে সমধাপ/পরবর্তী ধাপ নির্ধারণ করা হয়েছে (iBAS++ এর সাথে মিলিয়ে যাচাইকৃত)।");
     }
   }
 
@@ -396,25 +410,74 @@ function hgTimeline(o) {
   return { ms, notes };
 }
 
-function renderHg() {
-  const o = { gMain: Number($("hgMain").value), cnt: Number($("hgCnt").value), start: toDate($("hgStart").value), first: toDate($("hgFirst").value), blocked: $("hgBlocked").checked };
+let HG_PROOF = null;                                  // যাচাইকৃত যোগ্যতার প্রমাণ-লাইন (শুধু সফল যাচাইয়ের পরই বসে)
+function openHgModal() { $("hgModalBackdrop").classList.remove("hidden"); }
+function closeHgModal() { $("hgModalBackdrop").classList.add("hidden"); }
+function lockHgNow(msg) {
+  $("hgNow").checked = false; $("hgNow").disabled = true;
+  $("hgNowBox").classList.add("hidden");
+  $("hgNowStatus").innerHTML = `<span style="color:#dc2626">❌ এই মুহূর্তে উচ্চতর গ্রেড প্রাপ্য নয়।</span> ${msg || ""}`;
+  HG_PROOF = null;
+}
+function unlockHgNow(proof) {
+  $("hgNow").disabled = false;
+  $("hgNowStatus").innerHTML = `<span style="color:#15803d">✅ যাচাইকৃত — ১ জুলাই ২০২৬ থেকে একটি উচ্চতর গ্রেড প্রাপ্য।</span> নিচের চেকবক্সে টিক দিয়ে সেই গ্রেডে হিসাব করুন।`;
+  HG_PROOF = proof;
+}
+// নীরব যোগ্যতা-যাচাই (কোনো পপ-আপ/মোডাল দেখায় না) — ইনপুট বদলের সময় ও মূল হিসাবের আগে ব্যবহৃত হয়
+function checkHgEligibility() {
+  const cntRaw = $("hgCnt").value;
+  if (cntRaw === "") { lockHgNow("প্রয়োজনীয় তথ্য অসম্পূর্ণ।"); return null; }
+  const cnt = Number(cntRaw);
+  if (cnt === 0 && !$("hgStart").value) { lockHgNow("প্রয়োজনীয় তথ্য অসম্পূর্ণ।"); return null; }
+  if (cnt === 1 && !$("hgFirst").value) { lockHgNow("প্রয়োজনীয় তথ্য অসম্পূর্ণ।"); return null; }
+  if (!$("hgSatisfactory").checked) { lockHgNow("সন্তোষজনক চাকরির স্বীকারোক্তি দেওয়া হয়নি।"); return null; }
+
+  const o = { gMain: Number($("hgMain").value), cnt, start: toDate($("hgStart").value), first: toDate($("hgFirst").value), blocked: $("hgBlocked").checked };
   const r = hgTimeline(o);
+  const J26 = new Date(2026, 6, 1);
+  const due = r.ms.find(m => !m.no && m.date && m.date.getTime() <= J26.getTime());
+
+  if (due) {
+    const basis = cnt === 0 ? ("যোগদান/শেষ পদোন্নতি: " + bnDate(o.start)) : ("প্রথম উচ্চতর গ্রেড: " + bnDate(o.first));
+    const proof = "যোগ্যতার প্রমাণ — " + due.t.replace(" — ", ", কার্যকর ") + ". " + due.d + " | " + basis + " | পূর্বে প্রাপ্ত: " + (cnt === 2 ? "২ বা তার বেশি" : bnNum.format(cnt) + "টি") + " | চাকরি সন্তোষজনক বলে স্বীকৃত।";
+    unlockHgNow(proof);
+  } else {
+    const next = r.ms.find(m => !m.no && m.date);
+    lockHgNow(next ? ("পরবর্তী প্রাপ্যতা: " + next.t + "।") : "আপনার তথ্য অনুযায়ী এই মুহূর্তে কোনো উচ্চতর গ্রেড প্রাপ্য নয়।");
+  }
+  return { o, r, due, cnt };
+}
+// hgBtn এ চাপলে এই ফাংশন চলে — নীরব যাচাইয়ের ফলাফল পপ-আপে দেখায়, সাথে প্রয়োজনে হ্যাঁ/না বাটন
+function renderHg() {
+  const res = checkHgEligibility();
+  if (!res) {
+    $("hgOut").innerHTML = `<div class="warn">${$("hgNowStatus").textContent}</div>`;
+    $("hgModalActions").innerHTML = '<button type="button" class="btn-close" id="hgCloseBtn">বন্ধ করুন</button>';
+    openHgModal();
+    $("hgCloseBtn").onclick = closeHgModal;
+    return;
+  }
+  const { r, due } = res;
   $("hgOut").innerHTML =
     (r.ms.length ? r.ms.map(m => `<div class="ms${m.no ? " no" : ""}"><b>${m.t}</b><br><span class="note">${m.d}</span></div>`).join("") : "") +
-    r.notes.map(t => `<div class="warn">${t}</div>`).join("") +
-    (r.ms.some(m => m.date && m.date.getTime() === new Date(2026, 6, 1).getTime())
-      ? `<div class="note">১ জুলাই ২০২৬ থেকে প্রাপ্য গ্রেডে বেতন দেখতে উপরে "১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য" টিক দিন এবং "গ্রেড" ঘরে ৩০ জুন ২০২৬-এর বেতনের গ্রেড রাখুন।</div>` : "");
-  $("hgCard").classList.remove("hidden");
+    r.notes.map(t => `<div class="warn">${t}</div>`).join("");
+
+  if (due) {
+    $("hgOut").insertAdjacentHTML("beforeend", `<p class="note" style="margin-top:10px">আপনি কি ১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য বলে ধরে এই গ্রেডে বেতন হিসাব করতে চান?</p>`);
+    $("hgModalActions").innerHTML = `<button type="button" class="btn-yes" id="hgYesBtn">✅ হ্যাঁ — ১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য</button><button type="button" class="btn-no" id="hgNoBtn">❌ না — ১ জুলাই ২০২৬ থেকেই একটি উচ্চতর গ্রেড প্রাপ্য নয়</button>`;
+    $("hgYesBtn").onclick = () => { $("hgNow").checked = true; $("hgNow").dispatchEvent(new Event("change")); closeHgModal(); };
+    $("hgNoBtn").onclick = () => { $("hgNow").checked = false; $("hgNow").dispatchEvent(new Event("change")); closeHgModal(); };
+  } else {
+    $("hgModalActions").innerHTML = '<button type="button" class="btn-close" id="hgCloseBtn">বন্ধ করুন</button>';
+    $("hgCloseBtn").onclick = closeHgModal;
+  }
+  openHgModal();
 }
 function fillHgMain() {
   const s = $("hgMain"); if (!s.options.length) { for (let g = 1; g <= 20; g++) { const o = document.createElement("option"); o.value = g; o.textContent = "গ্রেড " + bnNum.format(g); s.appendChild(o); } }
   if (!s.dataset.touched) { const gr = SPECIAL[$("grade").value] ? 1 : Number($("grade").value); s.value = Math.min(20, gr + Number($("hgCnt").value || 0)); }
 }
-function fillHgManual() {
-  const g = SPECIAL[$("grade").value] ? 1 : Number($("grade").value), sel = $("hgManual"); sel.innerHTML = "";
-  if (g >= 5) NEW[g - 1].forEach(v => { const o = document.createElement("option"); o.value = v; o.textContent = fmt(v); sel.appendChild(o); });
-}
-
 /* ===== ফর্ম প্রস্তুত ===== */
 function fillGrades() {
   const s = $("grade");
@@ -494,10 +557,11 @@ function renderGovForm(L, na, gLabel, meta) {
   html += govLine("৩", "পার্থক্য [১ − ২]", L.fixedPost ? na : fmt(L.l4));
   html += `<div class="sect">০১-০৭-২০২৬</div>`;
   html += govLine("৪", "প্রারম্ভিক ধাপ (২০২৬ স্কেল)", fmt(L.l5));
-  html += govLine("৫", "যোগ [৩ + ৪]", fmt(L.l6));
-  if (L.hg) html += govLine("৫ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") সমধাপ/উচ্চ ধাপ", fmt(L.hg.mainStep));
-  html += govLine("৬", (L.hg ? "উচ্চতর গ্রেডের (গ্রেড " + bnNum.format(L.g) + ") " : "") + "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]", fmt(L.l7));
-  html += govLine("৭", "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), true);
+  html += govLine("৫", "মোট [৩ + ৪]", fmt(L.l6));
+  if (L.hg && L.hg.proof) html += `<div class="fp" style="margin:6px 0;padding:6px 8px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;color:#166534">${L.hg.proof}</div>`;
+  html += govLine("৬", "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]" + (L.hg ? " (মূল গ্রেড " + bnNum.format(L.gDrawn) + ")" : ""), fmt(L.l7));
+  if (L.hg) html += govLine("৬ক", "মূল স্কেলের ইনক্রিমেন্ট সহ মূল বেতন (৯(২) ধারা)", fmt(L.hg.mainInc));
+  html += govLine("৭", L.hg ? "উচ্চতর গ্রেডে (গ্রেড " + bnNum.format(L.g) + ") ৬ক এর সমান বা পরবর্তী ধাপ" : "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), true);
   html += govLine("৮", "বেতনবৃদ্ধির পরিমাণ [৬ − ১]", fmt(L.l10));
   html += govLine("৯", "বেতনবৃদ্ধির " + pctAmt(L.p1, L.l11) + " [" + band + " গ্রেড]", fmt(L.l11));
   html += govLine("১০", "প্রাপ্য বেতন [১ + ৯]", fmt(sr10));
@@ -529,11 +593,14 @@ function render() {
   const msgs = $("msgs"); msgs.innerHTML = "";
   if (!basic) { msgs.innerHTML = '<div class="warn">মূল বেতনের অঙ্ক দিন।</div>'; return; }
   if (!$("joinDate").value) { msgs.innerHTML = '<div class="warn">চাকরিতে যোগদানের তারিখ দিন — বার্ষিক ইনক্রিমেন্ট সঠিকভাবে হিসাব করতে এটি আবশ্যক।</div>'; return; }
+  if ($("hgNow").checked && !HG_PROOF) { msgs.innerHTML = '<div class="warn">উচ্চতর গ্রেডের যোগ্যতা যাচাই করা হয়নি। প্রথমে "প্রাপ্যতার সময়সূচি যাচাই করুন" চেপে যোগ্যতা নিশ্চিত করুন।</div>'; return; }
 
-  const hgState = { on: $("hgNow").checked, method: $("hgMethod").value, manual: $("hgManual").value };
+  const hgState = { on: $("hgNow").checked };
   const joinDate = toDate($("joinDate").value);
   const L = calculate(grade, basic, pp, hgState, joinDate);
+  if (L.hg) L.hg.proof = HG_PROOF;
   L.warn.forEach(t => msgs.insertAdjacentHTML("beforeend", `<div class="warn">${t}</div>`));
+  if (L.hg) msgs.insertAdjacentHTML("beforeend", `<div class="warn" style="background:#f0fdf4;border-color:#86efac;color:#166534">✅ ${L.hg.proof}</div>`);
 
   const na = "প্রযোজ্য নয়";
   const pct = x => bnNum.format(Math.round(x * 100)) + "%";
@@ -551,10 +618,10 @@ function render() {
     row("৩", "পার্থক্য [১ − ২]", L.fixedPost ? na : fmt(L.l4)) +
     row("", "০১-০৭-২০২৬", "", "grp") +
     row("৪", "প্রারম্ভিক ধাপ (২০২৬ স্কেল)", fmt(L.l5)) +
-    row("৫", "যোগ [৩ + ৪]", fmt(L.l6)) +
-    (L.hg ? row("৫ক", "মূল স্কেলের (গ্রেড " + bnNum.format(L.gDrawn) + ") সমধাপ/উচ্চ ধাপ", fmt(L.hg.mainStep), "sub") : "") +
-    row("৬", (L.hg ? "উচ্চতর গ্রেডের (গ্রেড " + bnNum.format(L.g) + ") " : "") + "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]", fmt(L.l7)) +
-    row("৭", "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), "hl") +
+    row("৫", "মোট [৩ + ৪]", fmt(L.l6)) +
+    row("৬", "নতুন স্কেলের সমধাপ/উচ্চ ধাপ [৫ এর সমান বা পরবর্তী ধাপ]" + (L.hg ? " (মূল গ্রেড " + bnNum.format(L.gDrawn) + ")" : ""), fmt(L.l7)) +
+    (L.hg ? row("৬ক", "মূল স্কেলের ইনক্রিমেন্ট সহ মূল বেতন (৯(২) ধারা)", fmt(L.hg.mainInc), "sub") : "") +
+    row("৭", L.hg ? "উচ্চতর গ্রেডে (গ্রেড " + bnNum.format(L.g) + ") ৬ক এর সমান বা পরবর্তী ধাপ" : "বর্ধিত বেতনবৃদ্ধি (ইনক্রিমেন্ট) সহ মূল বেতন (৯(২) ধারা)", fmt(L.l8), "hl") +
     row("৮", "বেতনবৃদ্ধির পরিমাণ [৬ − ১]", fmt(L.l10)) +
     row("৯", "বেতনবৃদ্ধির " + pctAmt(L.p1, L.l11) + " [" + band + " গ্রেড]", fmt(L.l11)) +
     row("১০", "প্রাপ্য বেতন [১ + ৯]", fmt(sr10)) +
@@ -620,20 +687,20 @@ function render() {
 
   renderGovForm(L, na, gLabel, { office: $("offName").value.trim(), name: $("empName").value.trim(), desig: $("desig").value.trim() });
 
-  if ($("hgStart").value || $("hgFirst").value || Number($("hgCnt").value) >= 2) renderHg();
+  if ($("hgStart").value || $("hgFirst").value || Number($("hgCnt").value) >= 2) checkHgEligibility();
   $("stmtCard").classList.remove("hidden");
   $("stageCard").classList.remove("hidden");
   $("stmtCard").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 fillGrades(); fillBasics();
-fillHgMain(); fillHgManual();
-$("grade").addEventListener("change", () => { fillBasics(); fillHgMain(); fillHgManual(); });
-$("hgMain").addEventListener("change", () => { $("hgMain").dataset.touched = "1"; });
-$("hgCnt").addEventListener("change", () => { $("hgFirstWrap").classList.toggle("hidden", $("hgCnt").value !== "1"); fillHgMain(); });
+fillHgMain();
+$("grade").addEventListener("change", () => { fillBasics(); fillHgMain(); });
+$("hgMain").addEventListener("change", () => { $("hgMain").dataset.touched = "1"; lockHgNow("ইনপুট বদলেছে — আবার যাচাই করুন।"); });
+$("hgCnt").addEventListener("change", () => { $("hgFirstWrap").classList.toggle("hidden", $("hgCnt").value !== "1"); fillHgMain(); lockHgNow("ইনপুট বদলেছে — আবার যাচাই করুন।"); });
+["hgStart", "hgFirst", "hgBlocked", "hgSatisfactory"].forEach(id => $(id).addEventListener("change", () => lockHgNow("ইনপুট বদলেছে — আবার যাচাই করুন।")));
 $("hgNow").addEventListener("change", () => { $("hgNowBox").classList.toggle("hidden", !$("hgNow").checked); });
-$("hgMethod").addEventListener("change", () => { $("hgManualWrap").classList.toggle("hidden", $("hgMethod").value !== "C"); });
-$("hgBtn").addEventListener("click", () => { renderHg(); $("hgCard").scrollIntoView({ behavior: "smooth", block: "start" }); });
+$("hgBtn").addEventListener("click", renderHg);
 $("calcBtn").addEventListener("click", render);
 $("govPrintBtn").addEventListener("click", () => {
   document.body.classList.add("print-official");
